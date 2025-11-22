@@ -93,7 +93,7 @@ export default function HomePage() {
             <div className="relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-purple-900/20 to-black">
               <iframe
                 className="h-full w-full"
-                src="https://www.youtube.com/embed/Xp7enikm6V0"
+                src="https://www.youtube.com/embed/Xp7enikm6V0?modestbranding=1&showinfo=0&rel=0"
                 title="Gameplay Video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
