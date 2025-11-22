@@ -8,7 +8,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Panel HyperPlay - Premium Gaming Cheats",
+  title: "Panel Hyper Soporte - Premium Gaming Cheats",
   description: "Premium gaming enhancements trusted by 1,800+ players worldwide. Undetected. Reliable. Professional.",
   generator: "Bucaramarketing",
   icons: {

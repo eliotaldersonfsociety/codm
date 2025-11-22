@@ -38,6 +38,18 @@ export function Header() {
             <Link href="/free-fire" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
               Free Fire
             </Link>
+            <Link href="/pubg" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
+              PUBG
+            </Link>
+            <Link href="/ball-pool" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
+              Ball Pool
+            </Link>
+            <Link href="/arena-breakout" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
+              Arena Breakout
+            </Link>
+            <Link href="/delta-force" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
+              Delta Force
+            </Link>
             <Link href="/status" className="text-sm font-medium text-gray-300 transition-colors hover:text-white">
               Status
             </Link>
