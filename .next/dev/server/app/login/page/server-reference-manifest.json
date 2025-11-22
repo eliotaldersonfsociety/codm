@@ -1,0 +1,35 @@
+{
+  "node": {
+    "407fe4477a674799f3a7590b1590a785bf93da7eb8": {
+      "workers": {
+        "app/login/page": {
+          "moduleId": "[project]/richard/.next-internal/server/app/login/page/actions.js { ACTIONS_MODULE0 => \"[project]/richard/app/actions/auth.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true,
+          "exportedName": "loginUser",
+          "filename": "richard/app/actions/auth.ts"
+        }
+      },
+      "layer": {
+        "app/login/page": "action-browser"
+      },
+      "exportedName": "loginUser",
+      "filename": "richard/app/actions/auth.ts"
+    },
+    "00824fc64110358ac237a51bb948da87d61f0d5839": {
+      "workers": {
+        "app/login/page": {
+          "moduleId": "[project]/richard/.next-internal/server/app/login/page/actions.js { ACTIONS_MODULE0 => \"[project]/richard/app/actions/auth.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true,
+          "exportedName": "getCurrentUser",
+          "filename": "richard/app/actions/auth.ts"
+        }
+      },
+      "layer": {
+        "app/login/page": "action-browser"
+      },
+      "exportedName": "getCurrentUser",
+      "filename": "richard/app/actions/auth.ts"
+    }
+  },
+  "edge": {}
+}

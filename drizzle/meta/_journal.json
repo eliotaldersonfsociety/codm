@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1763604085329,
+      "tag": "0000_damp_chamber",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1763605981895,
+      "tag": "0001_true_onslaught",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1763667738257,
+      "tag": "0002_lying_mister_sinister",
+      "breakpoints": true
+    }
+  ]
+}

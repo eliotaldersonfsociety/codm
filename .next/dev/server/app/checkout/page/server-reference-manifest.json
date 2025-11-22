@@ -1,0 +1,20 @@
+{
+  "node": {
+    "40870bedd7b9e77a75e667575f1added96759c2a3b": {
+      "workers": {
+        "app/checkout/page": {
+          "moduleId": "[project]/richard/.next-internal/server/app/checkout/page/actions.js { ACTIONS_MODULE0 => \"[project]/richard/app/actions/orders.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": true,
+          "exportedName": "saveOrder",
+          "filename": "richard/app/actions/orders.ts"
+        }
+      },
+      "layer": {
+        "app/checkout/page": "action-browser"
+      },
+      "exportedName": "saveOrder",
+      "filename": "richard/app/actions/orders.ts"
+    }
+  },
+  "edge": {}
+}
