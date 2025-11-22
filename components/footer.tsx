@@ -13,13 +13,13 @@ export function Footer() {
                   <path d="M12 2L4 7v10l8 5 8-5V7l-8-5zm0 2.18l5.5 3.44v6.76L12 17.82l-5.5-3.44V7.62L12 4.18z"/>
                 </svg>
               </div>
-              <span className="text-lg font-bold text-white">Panel HyperPlay</span>
+              <span className="text-lg font-bold text-white">Panel Hyper Soporte</span>
             </div>
             <p className="text-sm text-gray-400">
               Premium gaming enhancements trusted by 1,800+ players worldwide. Undetected. Reliable. Professional.
             </p>
             <p className="text-xs text-gray-500">
-              © 2025 Panel HyperPlay Network. All rights reserved.
+              © 2025 Panel Hyper Soporte Network. All rights reserved.
             </p>
           </div>
 
