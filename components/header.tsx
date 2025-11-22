@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Menu, Moon, ShoppingCart } from "lucide-react"
 import { useCartStore } from "@/lib/cart-store"
 import { useMenuStore } from "@/lib/menu-store"
+import Image from "next/image"
 
 export function Header() {
   const { items, openCart } = useCartStore()
@@ -16,10 +17,14 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-700">
-              <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L4 7v10l8 5 8-5V7l-8-5zm0 2.18l5.5 3.44v6.76L12 17.82l-5.5-3.44V7.62L12 4.18z" />
-              </svg>
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 overflow-hidden">
+              <Image
+                src="/icon.png"
+                alt="Logo"
+                width={40}
+                height={40}
+                className="rounded-lg object-cover"
+              />
             </div>
           </Link>
 
