@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Check, ShoppingCart } from "lucide-react"
 import { useCartStore } from "@/lib/cart-store"
+import Image from "next/image"
 
 export default function FreeFirePage() {
   const { addItem, openCart } = useCartStore()
@@ -46,9 +47,16 @@ export default function FreeFirePage() {
             {/* Daily Plan */}
             <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
               <CardContent className="p-8">
+                <Image
+                  src="/freefire.jpg"
+                  alt="Free Fire"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Daily</h3>
-                  <div className="mb-2 text-4xl font-bold text-purple-400">$6.99</div>
+                  <div className="mb-2 text-4xl font-bold text-purple-400">$6</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>
 
@@ -84,11 +92,11 @@ export default function FreeFirePage() {
                 </div>
 
                 <Button
-                  onClick={() => handleAddToCart("1 day", 6.99)}
+                  onClick={() => handleAddToCart("1 day", 6)}
                   className="w-full gap-2 bg-purple-600 hover:bg-purple-700"
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Buy Now - $6.99
+                  Buy Now - $6
                 </Button>
               </CardContent>
             </Card>
@@ -102,9 +110,16 @@ export default function FreeFirePage() {
                 </Badge>
               </div>
               <CardContent className="p-8">
+                <Image
+                  src="/freefire.jpg"
+                  alt="Free Fire"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Monthly</h3>
-                  <div className="mb-2 text-4xl font-bold text-purple-400">$26.99</div>
+                  <div className="mb-2 text-4xl font-bold text-purple-400">$50</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>
 
@@ -140,11 +155,11 @@ export default function FreeFirePage() {
                 </div>
 
                 <Button
-                  onClick={() => handleAddToCart("30 days", 26.99)}
+                  onClick={() => handleAddToCart("30 days", 50)}
                   className="w-full gap-2 bg-purple-600 hover:bg-purple-700"
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Buy Now - $26.99
+                  Buy Now - $50
                 </Button>
               </CardContent>
             </Card>
@@ -152,9 +167,16 @@ export default function FreeFirePage() {
             {/* Weekly Plan */}
             <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
               <CardContent className="p-8">
+                <Image
+                  src="/freefire.jpg"
+                  alt="Free Fire"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Weekly</h3>
-                  <div className="mb-2 text-4xl font-bold text-purple-400">$17.99</div>
+                  <div className="mb-2 text-4xl font-bold text-purple-400">$25</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>
 
@@ -190,11 +212,11 @@ export default function FreeFirePage() {
                 </div>
 
                 <Button
-                  onClick={() => handleAddToCart("7 days", 17.99)}
+                  onClick={() => handleAddToCart("7 days", 25)}
                   className="w-full gap-2 bg-purple-600 hover:bg-purple-700"
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Buy Now - $17.99
+                  Buy Now - $25
                 </Button>
               </CardContent>
             </Card>

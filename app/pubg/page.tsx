@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Check, ShoppingCart } from "lucide-react"
 import { useCartStore } from "@/lib/cart-store"
+import Image from "next/image"
 
 export default function PUBGPage() {
   const { addItem, openCart } = useCartStore()
@@ -46,6 +47,13 @@ export default function PUBGPage() {
             {/* Daily Plan */}
             <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
               <CardContent className="p-8">
+                <Image
+                  src="/pubg.jpeg"
+                  alt="PUBG"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Daily</h3>
                   <div className="mb-2 text-4xl font-bold text-purple-400">$6</div>
@@ -102,6 +110,13 @@ export default function PUBGPage() {
                 </Badge>
               </div>
               <CardContent className="p-8">
+                <Image
+                  src="/pubg.jpeg"
+                  alt="PUBG"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Monthly</h3>
                   <div className="mb-2 text-4xl font-bold text-purple-400">$50</div>
@@ -152,6 +167,13 @@ export default function PUBGPage() {
             {/* Weekly Plan */}
             <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
               <CardContent className="p-8">
+                <Image
+                  src="/pubg.jpeg"
+                  alt="PUBG"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Weekly</h3>
                   <div className="mb-2 text-4xl font-bold text-purple-400">$25</div>

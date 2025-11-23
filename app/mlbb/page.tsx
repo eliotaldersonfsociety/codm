@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Check, ShoppingCart } from "lucide-react"
 import { useCartStore } from "@/lib/cart-store"
+import Image from "next/image"
 
 export default function MLBBPage() {
   const { addItem, openCart } = useCartStore()
@@ -46,9 +47,16 @@ export default function MLBBPage() {
             {/* Daily Plan */}
             <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
               <CardContent className="p-8">
+                <Image
+                  src="/mlbb.webp"
+                  alt="MLBB"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Daily</h3>
-                  <div className="mb-2 text-4xl font-bold text-purple-400">$6.99</div>
+                  <div className="mb-2 text-4xl font-bold text-purple-400">$6</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>
 
@@ -80,11 +88,11 @@ export default function MLBBPage() {
                 </div>
 
                 <Button
-                  onClick={() => handleAddToCart("1 days", 6.99)}
+                  onClick={() => handleAddToCart("1 days", 6)}
                   className="w-full gap-2 bg-purple-600 hover:bg-purple-700"
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Buy Now - $6.99
+                  Buy Now - $6
                 </Button>
               </CardContent>
             </Card>
@@ -98,9 +106,16 @@ export default function MLBBPage() {
                 </Badge>
               </div>
               <CardContent className="p-8">
+                <Image
+                  src="/mlbb.webp"
+                  alt="MLBB"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Monthly</h3>
-                  <div className="mb-2 text-4xl font-bold text-purple-400">$29.99</div>
+                  <div className="mb-2 text-4xl font-bold text-purple-400">$50</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>
 
@@ -132,11 +147,11 @@ export default function MLBBPage() {
                 </div>
 
                 <Button
-                  onClick={() => handleAddToCart("30 days", 29.99)}
+                  onClick={() => handleAddToCart("30 days", 50)}
                   className="w-full gap-2 bg-purple-600 hover:bg-purple-700"
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Buy Now - $29.99
+                  Buy Now - $50
                 </Button>
               </CardContent>
             </Card>
@@ -144,9 +159,16 @@ export default function MLBBPage() {
             {/* Weekly Plan */}
             <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
               <CardContent className="p-8">
+                <Image
+                  src="/mlbb.webp"
+                  alt="MLBB"
+                  width={400}
+                  height={150}
+                  className="w-full object-cover rounded-lg mb-4"
+                />
                 <div className="mb-6 text-center">
                   <h3 className="mb-4 text-2xl font-bold text-white">Weekly</h3>
-                  <div className="mb-2 text-4xl font-bold text-purple-400">$17.99</div>
+                  <div className="mb-2 text-4xl font-bold text-purple-400">$25</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>
 
@@ -178,11 +200,11 @@ export default function MLBBPage() {
                 </div>
 
                 <Button
-                  onClick={() => handleAddToCart("7 days", 17.99)}
+                  onClick={() => handleAddToCart("7 days", 25)}
                   className="w-full gap-2 bg-purple-600 hover:bg-purple-700"
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Buy Now - $17.99
+                  Buy Now - $25
                 </Button>
               </CardContent>
             </Card>
