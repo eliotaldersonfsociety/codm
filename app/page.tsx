@@ -305,6 +305,174 @@ export default function HomePage() {
               <h3 className="mb-3 text-xl font-bold text-purple-400">Affordable Prices</h3>
               <p className="text-gray-400">Our software's excellence is coupled with very reasonable pricing.</p>
             </Card>
+
+            {/* PUBG Card */}
+            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+              <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
+                <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
+                <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
+                <img
+                  src="/placeholder.jpg"
+                  alt="PUBG"
+                  className="h-full w-full object-cover opacity-80"
+                />
+              </div>
+              <CardContent className="p-6">
+                <h3 className="mb-2 text-2xl font-bold text-white">PUBG</h3>
+                <p className="mb-4 text-sm text-gray-400">
+                  Dominate the battlegrounds with our premium PUBG cheats. Available for iOS and Android (no root required).
+                </p>
+                <div className="mb-4">
+                  <p className="mb-2 text-sm font-semibold text-white">Features:</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      Aimbot
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      ESP Hack
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      No Recoil
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      Radar Hack
+                    </Badge>
+                  </div>
+                </div>
+                <Link href="/pubg" className="block">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    buy
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Ball Pool Card */}
+            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+              <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
+                <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
+                <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
+                <img
+                  src="/placeholder.jpg"
+                  alt="Ball Pool"
+                  className="h-full w-full object-cover opacity-80"
+                />
+              </div>
+              <CardContent className="p-6">
+                <h3 className="mb-2 text-2xl font-bold text-white">Ball Pool</h3>
+                <p className="mb-4 text-sm text-gray-400">
+                  Master the pool table with our advanced Ball Pool cheats. Available for Android and iOS.
+                </p>
+                <div className="mb-4">
+                  <p className="mb-2 text-sm font-semibold text-white">Features:</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      Aimbot
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      ESP Hack
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      No Recoil
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      Radar Hack
+                    </Badge>
+                  </div>
+                </div>
+                <Link href="/ball-pool" className="block">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    buy
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Arena Breakout Card */}
+            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+              <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
+                <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
+                <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
+                <img
+                  src="/placeholder.jpg"
+                  alt="Arena Breakout"
+                  className="h-full w-full object-cover opacity-80"
+                />
+              </div>
+              <CardContent className="p-6">
+                <h3 className="mb-2 text-2xl font-bold text-white">Arena Breakout</h3>
+                <p className="mb-4 text-sm text-gray-400">
+                  Break through the competition with our premium Arena Breakout cheats. Available for iOS only.
+                </p>
+                <div className="mb-4">
+                  <p className="mb-2 text-sm font-semibold text-white">Features:</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      Aimbot
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      ESP Hack
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      No Recoil
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      Radar Hack
+                    </Badge>
+                  </div>
+                </div>
+                <Link href="/arena-breakout" className="block">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    buy
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Delta Force Card */}
+            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+              <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
+                <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
+                <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
+                <img
+                  src="/placeholder.jpg"
+                  alt="Delta Force"
+                  className="h-full w-full object-cover opacity-80"
+                />
+              </div>
+              <CardContent className="p-6">
+                <h3 className="mb-2 text-2xl font-bold text-white">Delta Force</h3>
+                <p className="mb-4 text-sm text-gray-400">
+                  Force your way to victory with our advanced Delta Force cheats. Available for Android only.
+                </p>
+                <div className="mb-4">
+                  <p className="mb-2 text-sm font-semibold text-white">Features:</p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      Aimbot
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      ESP Hack
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      No Recoil
+                    </Badge>
+                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
+                      Radar Hack
+                    </Badge>
+                  </div>
+                </div>
+                <Link href="/delta-force" className="block">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    buy
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
