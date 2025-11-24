@@ -26,7 +26,7 @@ export default function DeltaForcePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <Header />
       <ShoppingCartModal />
       <NavigationMenu />
@@ -34,7 +34,7 @@ export default function DeltaForcePage() {
       <section className="relative pt-32 pb-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h1 className="mb-4 text-5xl font-bold text-white lg:text-6xl">
+            <h1 className="mb-4 text-5xl font-bold dark:text-white text-purple-600 lg:text-6xl">
               Delta Force{" "}
               <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
                 Cheats
@@ -45,7 +45,7 @@ export default function DeltaForcePage() {
 
           <div className="grid gap-6 md:grid-cols-3">
             {/* Daily Plan */}
-            <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
+            <Card className="border-white/10 bg-white dark:bg-gradient-to-br dark:from-gray-900/50 dark:to-black">
               <CardContent className="p-8">
                 <Image
                   src="/deltaforce.webp"
@@ -55,7 +55,7 @@ export default function DeltaForcePage() {
                   className="w-full object-cover rounded-lg mb-4"
                 />
                 <div className="mb-6 text-center">
-                  <h3 className="mb-4 text-2xl font-bold text-white">Daily</h3>
+                  <h3 className="mb-4 text-2xl font-bold dark:text-white text-purple-600">Daily</h3>
                   <div className="mb-2 text-4xl font-bold text-purple-400">$6</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>
@@ -102,7 +102,7 @@ export default function DeltaForcePage() {
             </Card>
 
             {/* Monthly Plan */}
-            <Card className="relative border-purple-500 bg-gradient-to-br from-purple-900/20 to-black">
+            <Card className="relative border-purple-500 bg-white dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-black">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <Badge className="gap-1 bg-purple-600 text-white">
                   <span className="text-xs">⭐</span>
@@ -118,7 +118,7 @@ export default function DeltaForcePage() {
                   className="w-full object-cover rounded-lg mb-4"
                 />
                 <div className="mb-6 text-center">
-                  <h3 className="mb-4 text-2xl font-bold text-white">Monthly</h3>
+                  <h3 className="mb-4 text-2xl font-bold dark:text-white text-purple-600">Monthly</h3>
                   <div className="mb-2 text-4xl font-bold text-purple-400">$50</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>
@@ -165,7 +165,7 @@ export default function DeltaForcePage() {
             </Card>
 
             {/* Weekly Plan */}
-            <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
+            <Card className="border-white/10 bg-white dark:bg-gradient-to-br dark:from-gray-900/50 dark:to-black">
               <CardContent className="p-8">
                 <Image
                   src="/deltaforce.webp"
@@ -175,7 +175,7 @@ export default function DeltaForcePage() {
                   className="w-full object-cover rounded-lg mb-4"
                 />
                 <div className="mb-6 text-center">
-                  <h3 className="mb-4 text-2xl font-bold text-white">Weekly</h3>
+                  <h3 className="mb-4 text-2xl font-bold dark:text-white text-purple-600">Weekly</h3>
                   <div className="mb-2 text-4xl font-bold text-purple-400">$25</div>
                   <p className="text-sm text-gray-400">one-time payment</p>
                 </div>

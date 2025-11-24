@@ -6,25 +6,25 @@ import { RefreshCw } from "lucide-react"
 
 export default function StatusPage() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <Header />
 
       <section className="relative pt-32 pb-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h1 className="mb-4 text-5xl font-bold text-white lg:text-6xl">
+            <h1 className="mb-4 text-5xl font-bold dark:text-white text-purple-600 lg:text-6xl">
               <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-                Fluorite Status
+                Hyper Soporte Status
               </span>
             </h1>
           </div>
 
           <div className="mx-auto max-w-4xl">
-            <Card className="border-white/10 bg-gradient-to-br from-gray-900/50 to-black">
+            <Card className="border-white/10 bg-white dark:bg-gradient-to-br dark:from-gray-900/50 dark:to-black">
               <CardContent className="p-8">
                 <div className="mb-6 flex items-center justify-between">
                   <div>
-                    <h2 className="mb-2 text-2xl font-bold text-white">System Status</h2>
+                    <h2 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">System Status</h2>
                     <p className="text-sm text-gray-400">Current status of all Fluorite products</p>
                   </div>
                   <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
@@ -36,7 +36,7 @@ export default function StatusPage() {
                   {/* CODM Status */}
                   <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
                     <div className="flex items-center gap-4">
-                      <span className="font-semibold text-white">CODM</span>
+                      <span className="font-semibold dark:text-white text-purple-600">CODM</span>
                       <span className="text-sm text-gray-400">v1.0.50</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export default function StatusPage() {
                   {/* MLBB Status */}
                   <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
                     <div className="flex items-center gap-4">
-                      <span className="font-semibold text-white">MLBB</span>
+                      <span className="font-semibold dark:text-white text-purple-600">MLBB</span>
                       <span className="text-sm text-gray-400">v1.9.98</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -60,7 +60,7 @@ export default function StatusPage() {
                   {/* FF Status */}
                   <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
                     <div className="flex items-center gap-4">
-                      <span className="font-semibold text-white">FF</span>
+                      <span className="font-semibold dark:text-white text-purple-600">FF</span>
                       <span className="text-sm text-gray-400">v1.114</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export default function StatusPage() {
 
                 {/* Status Legend */}
                 <div className="mt-6 space-y-4">
-                  <h3 className="font-semibold text-white">Status Legend</h3>
+                  <h3 className="font-semibold dark:text-white text-purple-600">Status Legend</h3>
 
                   <div className="grid gap-3 md:grid-cols-2">
                     <div className="flex items-start gap-3 text-sm">

@@ -10,10 +10,19 @@ import { Badge } from "@/components/ui/badge"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Clock, Shield, Wallet, Check, Play, ShoppingCart, Star } from "lucide-react"
 import Link from "next/link"
+import { getRandomAvatars } from "@/app/actions/avatars"
+import { useState, useEffect } from "react"
 
 export default function HomePage() {
+  const [avatars, setAvatars] = useState<string[]>([]);
+  const [selectedGame, setSelectedGame] = useState("Mobile Legends");
+
+  useEffect(() => {
+    getRandomAvatars(4).then(setAvatars);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <Header />
       <ShoppingCartModal />
       <NavigationMenu />
@@ -25,7 +34,7 @@ export default function HomePage() {
             {/* Left Content */}
             <div className="space-y-8">
               <div className="space-y-4">
-                <h1 className="text-5xl font-bold leading-tight text-white lg:text-6xl">
+                <h1 className="text-5xl font-bold leading-tight text-foreground lg:text-6xl">
                   Mobile Legends:{" "}
                   <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
                     Bang Bang
@@ -130,7 +139,7 @@ export default function HomePage() {
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="mb-2 text-2xl font-bold text-white">Mobile Legends</h3>
+                <h3 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">Mobile Legends</h3>
                 <p className="mb-4 text-sm text-gray-400">
                   Dominate the Land of Dawn with our advanced Mobile Legends cheats.
                 </p>
@@ -181,7 +190,7 @@ export default function HomePage() {
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="mb-2 text-2xl font-bold text-white">Free Fire</h3>
+                <h3 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">Free Fire</h3>
                 <p className="mb-4 text-sm text-gray-400">
                   Become the last one standing with our undetectable Free Fire cheats.
                 </p>
@@ -223,7 +232,7 @@ export default function HomePage() {
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="mb-2 text-2xl font-bold text-white">CODM</h3>
+                <h3 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">CODM</h3>
                 <p className="mb-4 text-sm text-gray-400">Crush your enemies with our premium CODM cheats and hacks.</p>
                 <div className="mb-4">
                   <p className="mb-2 text-sm font-semibold text-white">Features:</p>
@@ -250,75 +259,19 @@ export default function HomePage() {
                 </Link>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Fluorite Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-white lg:text-5xl">
-              Why Choose{" "}
-              <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-                Panel HyperPlay
-              </span>
-            </h2>
-            <p className="text-lg text-gray-400">
-              Unmatched quality, security, and support for the ultimate gaming advantage.
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/5 to-black p-8 text-center">
-              <div className="mb-4 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-purple-500">
-                  <Clock className="h-8 w-8 text-purple-400" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold text-purple-400">24/7 Support</h3>
-              <p className="text-gray-400">
-                Our support team is available 24/7. If you have any questions, don't hesitate to contact our support
-                team. We are happy to answer your inquiries.
-              </p>
-            </Card>
-
-            <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/5 to-black p-8 text-center">
-              <div className="mb-4 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-purple-500">
-                  <Shield className="h-8 w-8 text-purple-400" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold text-purple-400">Maximum Security</h3>
-              <p className="text-gray-400">
-                Panel HyperPlay provides the highest level of protection available, ensuring your account stays safe while
-                using our premium cheats.
-              </p>
-            </Card>
-
-            <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/5 to-black p-8 text-center">
-              <div className="mb-4 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-purple-500">
-                  <Wallet className="h-8 w-8 text-purple-400" />
-                </div>
-              </div>
-              <h3 className="mb-3 text-xl font-bold text-purple-400">Affordable Prices</h3>
-              <p className="text-gray-400">Our software's excellence is coupled with very reasonable pricing.</p>
-            </Card>
-
             {/* PUBG Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+            <Card className="overflow-hidden border-purple-500/20 bg-white">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
                 <img
-                  src="/placeholder.jpg"
+                  src="/pubg.png"
                   alt="PUBG"
                   className="h-full w-full object-cover opacity-80"
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="mb-2 text-2xl font-bold text-white">PUBG</h3>
+                <h3 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">PUBG</h3>
                 <p className="mb-4 text-sm text-gray-400">
                   Dominate the battlegrounds with our premium PUBG cheats. Available for iOS and Android (no root required).
                 </p>
@@ -348,61 +301,19 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            {/* Ball Pool Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
-              <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
-                <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
-                <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
-                <img
-                  src="/placeholder.jpg"
-                  alt="Ball Pool"
-                  className="h-full w-full object-cover opacity-80"
-                />
-              </div>
-              <CardContent className="p-6">
-                <h3 className="mb-2 text-2xl font-bold text-white">Ball Pool</h3>
-                <p className="mb-4 text-sm text-gray-400">
-                  Master the pool table with our advanced Ball Pool cheats. Available for Android and iOS.
-                </p>
-                <div className="mb-4">
-                  <p className="mb-2 text-sm font-semibold text-white">Features:</p>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
-                      Aimbot
-                    </Badge>
-                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
-                      ESP Hack
-                    </Badge>
-                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
-                      No Recoil
-                    </Badge>
-                    <Badge variant="secondary" className="bg-white/5 text-xs text-gray-300">
-                      Radar Hack
-                    </Badge>
-                  </div>
-                </div>
-                <Link href="/ball-pool" className="block">
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    buy
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
             {/* Arena Breakout Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+            <Card className="overflow-hidden border-purple-500/20 bg-white">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
                 <img
-                  src="/placeholder.jpg"
+                  src="/arena.jpg"
                   alt="Arena Breakout"
                   className="h-full w-full object-cover opacity-80"
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="mb-2 text-2xl font-bold text-white">Arena Breakout</h3>
+                <h3 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">Arena Breakout</h3>
                 <p className="mb-4 text-sm text-gray-400">
                   Break through the competition with our premium Arena Breakout cheats. Available for iOS only.
                 </p>
@@ -433,18 +344,18 @@ export default function HomePage() {
             </Card>
 
             {/* Delta Force Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+            <Card className="overflow-hidden border-purple-500/20 bg-white">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
                 <img
-                  src="/placeholder.jpg"
+                  src="/delta.jpg"
                   alt="Delta Force"
                   className="h-full w-full object-cover opacity-80"
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="mb-2 text-2xl font-bold text-white">Delta Force</h3>
+                <h3 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">Delta Force</h3>
                 <p className="mb-4 text-sm text-gray-400">
                   Force your way to victory with our advanced Delta Force cheats. Available for Android only.
                 </p>
@@ -472,6 +383,61 @@ export default function HomePage() {
                   </Button>
                 </Link>
               </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Fluorite Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-4xl font-bold text-white lg:text-5xl">
+              Why Choose{" "}
+              <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+                Panel HyperPlay
+              </span>
+            </h2>
+            <p className="text-lg text-gray-400">
+              Unmatched quality, security, and support for the ultimate gaming advantage.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-8 text-center">
+              <div className="mb-4 flex justify-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-purple-500">
+                  <Clock className="h-8 w-8 text-purple-400" />
+                </div>
+              </div>
+              <h3 className="mb-3 text-xl font-bold text-purple-400">24/7 Support</h3>
+              <p className="text-gray-400">
+                Our support team is available 24/7. If you have any questions, don't hesitate to contact our support
+                team. We are happy to answer your inquiries.
+              </p>
+            </Card>
+
+            <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-8 text-center">
+              <div className="mb-4 flex justify-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-purple-500">
+                  <Shield className="h-8 w-8 text-purple-400" />
+                </div>
+              </div>
+              <h3 className="mb-3 text-xl font-bold text-purple-400">Maximum Security</h3>
+              <p className="text-gray-400">
+                Panel HyperPlay provides the highest level of protection available, ensuring your account stays safe while
+                using our premium cheats.
+              </p>
+            </Card>
+
+            <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-8 text-center">
+              <div className="mb-4 flex justify-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-purple-500">
+                  <Wallet className="h-8 w-8 text-purple-400" />
+                </div>
+              </div>
+              <h3 className="mb-3 text-xl font-bold text-purple-400">Affordable Prices</h3>
+              <p className="text-gray-400">Our software's excellence is coupled with very reasonable pricing.</p>
             </Card>
           </div>
         </div>
@@ -513,11 +479,11 @@ export default function HomePage() {
 
           {/* Reviews */}
           <div className="grid gap-6 md:grid-cols-2">
-            <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/5 to-black p-6">
+            <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-6">
               <div className="mb-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-purple-600" />
+                <img src={avatars[0] || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
                 <div>
-                  <div className="font-semibold text-white">@lyrevagoonz</div>
+                  <div className="font-semibold dark:text-white text-purple-600">@lyrevagoonz</div>
                   <div className="text-sm text-gray-400">Mobile Legends Player</div>
                 </div>
               </div>
@@ -533,11 +499,11 @@ export default function HomePage() {
               </div>
             </Card>
 
-            <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/5 to-black p-6">
+            <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-6">
               <div className="mb-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-purple-600" />
+                <img src={avatars[1] || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
                 <div>
-                  <div className="font-semibold text-white">Ghost</div>
+                  <div className="font-semibold dark:text-white text-purple-600">Ghost</div>
                   <div className="text-sm text-gray-400">Free Fire Player</div>
                 </div>
               </div>
@@ -553,11 +519,11 @@ export default function HomePage() {
               </div>
             </Card>
 
-            <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/5 to-black p-6">
+            <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-6">
               <div className="mb-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-purple-600" />
+                <img src={avatars[2] || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
                 <div>
-                  <div className="font-semibold text-white">Y3S0xt</div>
+                  <div className="font-semibold dark:text-white text-purple-600">Y3S0xt</div>
                   <div className="text-sm text-gray-400">CODM Player</div>
                 </div>
               </div>
@@ -574,11 +540,11 @@ export default function HomePage() {
               </div>
             </Card>
 
-            <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/5 to-black p-6">
+            <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-6">
               <div className="mb-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-purple-600" />
+                <img src={avatars[3] || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
                 <div>
-                  <div className="font-semibold text-white">Hanni</div>
+                  <div className="font-semibold dark:text-white text-purple-600">Hanni</div>
                   <div className="text-sm text-gray-400">Mobile Legends Player</div>
                 </div>
               </div>
@@ -597,7 +563,7 @@ export default function HomePage() {
       </section>
 
       {/* Guides & Tutorials Section */}
-      <section className="bg-gradient-to-b from-purple-900/10 to-black py-20">
+      <section className="bg-transparent py-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-4xl font-bold text-white lg:text-5xl">
@@ -611,17 +577,59 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto max-w-4xl">
-            <div className="mb-8 flex gap-2 overflow-x-auto rounded-lg border border-white/10 bg-black/50 p-1">
-              <Button className="flex-1 bg-purple-600 hover:bg-purple-700">Mobile Legends</Button>
-              <Button variant="ghost" className="flex-1 text-gray-400 hover:text-white">
+            <div className="mb-8 grid grid-cols-2 gap-2 overflow-x-auto rounded-lg border border-white/10 bg-black/50 p-1 md:grid-cols-3 lg:grid-cols-4 xl:flex xl:gap-2">
+              <Button
+                className="flex-1"
+                variant={selectedGame === "Mobile Legends" ? "default" : "ghost"}
+                onClick={() => setSelectedGame("Mobile Legends")}
+              >
+                Mobile Legends
+              </Button>
+              <Button
+                className="flex-1"
+                variant={selectedGame === "Free Fire" ? "default" : "ghost"}
+                onClick={() => setSelectedGame("Free Fire")}
+              >
                 Free Fire
               </Button>
-              <Button variant="ghost" className="flex-1 text-gray-400 hover:text-white">
+              <Button
+                className="flex-1"
+                variant={selectedGame === "CODM" ? "default" : "ghost"}
+                onClick={() => setSelectedGame("CODM")}
+              >
                 CODM
+              </Button>
+              <Button
+                className="flex-1"
+                variant={selectedGame === "PUBG" ? "default" : "ghost"}
+                onClick={() => setSelectedGame("PUBG")}
+              >
+                PUBG
+              </Button>
+              <Button
+                className="flex-1"
+                variant={selectedGame === "Arena Breakout" ? "default" : "ghost"}
+                onClick={() => setSelectedGame("Arena Breakout")}
+              >
+                Arena Breakout
+              </Button>
+              <Button
+                className="flex-1"
+                variant={selectedGame === "Delta Force" ? "default" : "ghost"}
+                onClick={() => setSelectedGame("Delta Force")}
+              >
+                Delta Force
+              </Button>
+              <Button
+                className="flex-1"
+                variant={selectedGame === "8 Ball Pool" ? "default" : "ghost"}
+                onClick={() => setSelectedGame("8 Ball Pool")}
+              >
+                8 Ball Pool
               </Button>
             </div>
 
-            <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/5 to-black p-12 text-center">
+            <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-12 text-center">
               <div className="mb-6 flex justify-center">
                 <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-purple-500">
                   <svg className="h-10 w-10 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -634,19 +642,21 @@ export default function HomePage() {
                   </svg>
                 </div>
               </div>
-              <h3 className="mb-2 text-2xl font-bold text-white">Mobile Legends Setup Guide</h3>
-              <p className="mb-6 text-gray-400">Coming soon! We're preparing comprehensive guides for MLBB.</p>
+              <h3 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">{selectedGame} Setup Guide</h3>
+              <p className="mb-6 text-gray-400">Coming soon! We're preparing comprehensive guides for {selectedGame}.</p>
               <p className="mb-6 text-sm text-gray-500">
-                Our team is currently working on detailed guides for MLBB.
+                Our team is currently working on detailed guides for {selectedGame}.
                 <br />
-                Check back soon or join our Telegram for early access.
+                Check back soon or join our Discord for early access.
               </p>
-              <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-                </svg>
-                Join Telegram for Updates
-              </Button>
+              <Link href="https://discord.gg/h89Y27uBu" target="_blank">
+                <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 0 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 0 .078.01c.12-.098.246-.198.373-.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 1-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 1-.084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 1 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                  </svg>
+                  Join Discord for Updates
+                </Button>
+              </Link>
             </Card>
           </div>
         </div>
@@ -667,7 +677,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-3xl">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1" className="border-purple-500/20">
-                <AccordionTrigger className="text-left text-white hover:text-purple-400">
+                <AccordionTrigger className="text-left dark:text-white text-purple-600 hover:text-purple-400">
                   Are these cheats safe to use?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-400">
@@ -678,7 +688,7 @@ export default function HomePage() {
               </AccordionItem>
 
               <AccordionItem value="item-2" className="border-purple-500/20">
-                <AccordionTrigger className="text-left text-white hover:text-purple-400">
+                <AccordionTrigger className="text-left dark:text-white text-purple-600 hover:text-purple-400">
                   How do I install the cheats?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-400">
@@ -688,7 +698,7 @@ export default function HomePage() {
               </AccordionItem>
 
               <AccordionItem value="item-3" className="border-purple-500/20">
-                <AccordionTrigger className="text-left text-white hover:text-purple-400">
+                <AccordionTrigger className="text-left dark:text-white text-purple-600 hover:text-purple-400">
                   Do you offer refunds?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-400">
@@ -698,7 +708,7 @@ export default function HomePage() {
               </AccordionItem>
 
               <AccordionItem value="item-4" className="border-purple-500/20">
-                <AccordionTrigger className="text-left text-white hover:text-purple-400">
+                <AccordionTrigger className="text-left dark:text-white text-purple-600 hover:text-purple-400">
                   How often are the cheats updated?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-400">
@@ -708,7 +718,7 @@ export default function HomePage() {
               </AccordionItem>
 
               <AccordionItem value="item-5" className="border-purple-500/20">
-                <AccordionTrigger className="text-left text-white hover:text-purple-400">
+                <AccordionTrigger className="text-left dark:text-white text-purple-600 hover:text-purple-400">
                   Can I use the cheats on multiple devices?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-400">
@@ -718,7 +728,7 @@ export default function HomePage() {
               </AccordionItem>
 
               <AccordionItem value="item-6" className="border-purple-500/20">
-                <AccordionTrigger className="text-left text-white hover:text-purple-400">
+                <AccordionTrigger className="text-left dark:text-white text-purple-600 hover:text-purple-400">
                   What payment methods do you accept?
                 </AccordionTrigger>
                 <AccordionContent className="text-gray-400">
@@ -730,8 +740,8 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <Card className="mx-auto max-w-xl border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black p-8">
-              <h3 className="mb-4 text-xl font-bold text-white">Still have questions?</h3>
+            <Card className="mx-auto max-w-xl border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/10 dark:to-black p-8">
+              <h3 className="mb-4 text-xl font-bold dark:text-white text-purple-600">Still have questions?</h3>
               <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
                 <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />

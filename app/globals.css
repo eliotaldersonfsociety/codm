@@ -4,7 +4,36 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* <CHANGE> Updated to purple/black gaming theme */
+  /* Light mode colors */
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.1 0 0);
+  --card: oklch(0.95 0 0);
+  --card-foreground: oklch(0.1 0 0);
+  --popover: oklch(0.95 0 0);
+  --popover-foreground: oklch(0.1 0 0);
+  --primary: oklch(0.65 0.25 290);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.9 0 0);
+  --secondary-foreground: oklch(0.1 0 0);
+  --muted: oklch(0.9 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.6 0.28 285);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.55 0.25 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.85 0 0);
+  --input: oklch(0.85 0 0);
+  --ring: oklch(0.65 0.25 290);
+  --chart-1: oklch(0.65 0.25 290);
+  --chart-2: oklch(0.6 0.28 285);
+  --chart-3: oklch(0.7 0.22 295);
+  --chart-4: oklch(0.55 0.3 280);
+  --chart-5: oklch(0.75 0.2 300);
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* Dark mode colors */
   --background: oklch(0.05 0 0);
   --foreground: oklch(0.98 0 0);
   --card: oklch(0.08 0 0);
@@ -29,7 +58,6 @@
   --chart-3: oklch(0.7 0.22 295);
   --chart-4: oklch(0.55 0.3 280);
   --chart-5: oklch(0.75 0.2 300);
-  --radius: 0.625rem;
 }
 
 @theme inline {
@@ -70,6 +98,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-black text-foreground;
+    @apply bg-background text-foreground;
   }
 }

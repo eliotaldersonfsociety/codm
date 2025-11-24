@@ -4,9 +4,11 @@ import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useMenuStore } from "@/lib/menu-store"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export function NavigationMenu() {
   const { isOpen, closeMenu } = useMenuStore()
+  const pathname = usePathname()
 
   if (!isOpen) return null
 
@@ -27,12 +29,19 @@ export function NavigationMenu() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-6">
+          <div className="flex-1 p-6 overflow-y-auto">
             <p className="text-sm text-gray-400 mb-6">Navigate to page</p>
 
             <nav className="space-y-2">
               <Link
-                href="https://discord.gg/fluorite"
+                href="/"
+                onClick={closeMenu}
+                className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
+              >
+                Home
+              </Link>
+              <Link
+                href="https://discord.gg/h89Y27uBu"
                 target="_blank"
                 onClick={closeMenu}
                 className="block rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-white transition-colors hover:bg-white/5"
@@ -51,15 +60,68 @@ export function NavigationMenu() {
               <Link
                 href="/status"
                 onClick={closeMenu}
-                className="block rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-white transition-colors hover:bg-white/5"
+                className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/status' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
               >
                 Status
               </Link>
 
+              <div className="space-y-2">
+                <p className="text-sm text-gray-400">Games</p>
+                <Link
+                  href="/codm"
+                  onClick={closeMenu}
+                  className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/codm' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
+                >
+                  CODM
+                </Link>
+                <Link
+                  href="/mlbb"
+                  onClick={closeMenu}
+                  className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/mlbb' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
+                >
+                  MLBB
+                </Link>
+                <Link
+                  href="/free-fire"
+                  onClick={closeMenu}
+                  className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/free-fire' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
+                >
+                  Free Fire
+                </Link>
+                <Link
+                  href="/pubg"
+                  onClick={closeMenu}
+                  className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/pubg' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
+                >
+                  PUBG
+                </Link>
+                <Link
+                  href="/ball-pool"
+                  onClick={closeMenu}
+                  className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/ball-pool' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
+                >
+                  Ball Pool
+                </Link>
+                <Link
+                  href="/arena-breakout"
+                  onClick={closeMenu}
+                  className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/arena-breakout' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
+                >
+                  Arena Breakout
+                </Link>
+                <Link
+                  href="/delta-force"
+                  onClick={closeMenu}
+                  className={`block rounded-lg border px-4 py-3 text-white transition-colors ${pathname === '/delta-force' ? 'bg-purple-600 border-purple-600' : 'border-white/10 bg-black/40 hover:bg-white/5'}`}
+                >
+                  Delta Force
+                </Link>
+              </div>
+
               <Link
                 href="/dashboard"
                 onClick={closeMenu}
-                className="block rounded-lg bg-purple-600 px-4 py-3 text-center text-white transition-colors hover:bg-purple-700"
+                className={`block rounded-lg px-4 py-3 text-center text-white transition-colors ${pathname === '/dashboard' ? 'bg-purple-700' : 'bg-purple-600 hover:bg-purple-700'}`}
               >
                 Dashboard
               </Link>
