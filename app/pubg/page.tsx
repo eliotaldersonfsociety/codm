@@ -45,7 +45,7 @@ export default function PUBGPage() {
 
           <div className="grid gap-6 md:grid-cols-3">
             {/* Daily Plan */}
-            <Card className="border-white/10 bg-white dark:bg-gradient-to-br dark:from-gray-900/50 dark:to-black">
+            <Card className="border-white/10 bg-white dark:bg-black">
               <CardContent className="p-8">
                 <Image
                   src="/pubg.jpeg"
@@ -102,7 +102,7 @@ export default function PUBGPage() {
             </Card>
 
             {/* Monthly Plan */}
-            <Card className="relative border-purple-500 bg-white dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-black">
+            <Card className="relative border-purple-500 bg-white dark:bg-black">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <Badge className="gap-1 bg-purple-600 text-white">
                   <span className="text-xs">⭐</span>
@@ -165,7 +165,7 @@ export default function PUBGPage() {
             </Card>
 
             {/* Weekly Plan */}
-            <Card className="border-white/10 bg-white dark:bg-gradient-to-br dark:from-gray-900/50 dark:to-black">
+            <Card className="border-white/10 bg-white dark:bg-black">
               <CardContent className="p-8">
                 <Image
                   src="/pubg.jpeg"

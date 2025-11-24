@@ -10,10 +10,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useCartStore } from "@/lib/cart-store"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Upload, CheckCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { saveOrder } from "@/app/actions/orders"
+import { getCurrentUser } from "@/app/actions/auth"
+import { uploadImage } from "@/app/actions/upload"
 
 export default function CheckoutPage() {
   const { items, clearCart } = useCartStore()
@@ -23,7 +25,30 @@ export default function CheckoutPage() {
   const [proofImage, setProofImage] = useState<File | null>(null)
   const [proofPreview, setProofPreview] = useState<string>("")
   const [submitted, setSubmitted] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [error, setError] = useState<string>("")
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
+
+  useEffect(() => {
+    if (items.length === 0) {
+      router.push("/")
+      return
+    }
+
+    const checkUser = async () => {
+      const currentUser = await getCurrentUser()
+      if (!currentUser) {
+        router.push("/signup?redirect=/checkout")
+        return
+      }
+      setUser(currentUser)
+      setEmail(currentUser.email)
+      setLoading(false)
+      setLoading(false)
+    }
+    checkUser()
+  }, [items.length, router])
 
   const total = items.reduce((sum, item) => sum + item.price, 0)
 
@@ -41,34 +66,59 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
 
     if (!email || !proofImage) {
-      alert("Please fill in all required fields and upload payment proof")
+      setError("Please fill in all required fields and upload payment proof")
       return
     }
 
-    const formData = new FormData()
-    formData.append('email', email)
-    formData.append('discordUsername', discordUsername)
-    formData.append('notes', notes)
-    formData.append('total', total.toString())
-    formData.append('proofImage', proofPreview)
-    formData.append('items', JSON.stringify(items))
+    try {
+      // Upload image to ImageKit
+      const bytes = await proofImage.arrayBuffer()
+      const proofImageUrl = await uploadImage(bytes, proofImage.name)
 
-    const result = await saveOrder(formData)
+      const formData = new FormData()
+      formData.append('email', email)
+      formData.append('discordUsername', discordUsername)
+      formData.append('notes', notes)
+      formData.append('total', total.toString())
+      formData.append('proofImage', proofImageUrl)
+      formData.append('items', JSON.stringify(items))
 
-    if (result.error) {
-      alert(result.error)
-      return
+      const result = await saveOrder(formData)
+
+      if (result.error) {
+        setError(result.error)
+        return
+      }
+
+      setSubmitted(true)
+      clearCart()
+
+      // Redirect after 3 seconds
+      setTimeout(() => {
+        router.push("/dashboard")
+      }, 3000)
+    } catch (err: any) {
+      if (err.message?.includes("Body exceeded")) {
+        setError("The uploaded image is too large. Please upload an image smaller than 1MB.")
+      } else {
+        setError("An error occurred while submitting your order. Please try again.")
+      }
     }
+  }
 
-    setSubmitted(true)
-    clearCart()
-
-    // Redirect after 3 seconds
-    setTimeout(() => {
-      router.push("/dashboard")
-    }, 3000)
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 pt-32 pb-20">
+          <div className="text-center text-white">Loading...</div>
+        </div>
+        <Footer />
+      </div>
+    )
   }
 
   if (submitted) {
@@ -82,8 +132,7 @@ export default function CheckoutPage() {
             </div>
             <h2 className="mb-4 text-2xl font-bold text-white">Order Submitted!</h2>
             <p className="mb-6 text-gray-400">
-              Your order has been received. We'll process your payment and send your license key to your email within 24
-              hours.
+              Su pedido será revisado y en el transcurso del día se envía la key al dashboard de su cuenta y por email.
             </p>
             <p className="text-sm text-gray-500">Redirecting to dashboard...</p>
           </Card>
@@ -93,10 +142,6 @@ export default function CheckoutPage() {
     )
   }
 
-  if (items.length === 0) {
-    router.push("/")
-    return null
-  }
 
   return (
     <div className="min-h-screen bg-black">
@@ -113,6 +158,12 @@ export default function CheckoutPage() {
             </h1>
             <p className="text-gray-400">Fill in your details and upload payment proof to complete your order</p>
           </div>
+
+          {error && (
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-red-400">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Order Summary */}
@@ -138,26 +189,62 @@ export default function CheckoutPage() {
               </CardContent>
             </Card>
 
-            {/* Contact Information */}
+            {/* Contact Information - Only show if not logged in */}
+            {!user && (
+              <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+                <CardContent className="space-y-4 p-6">
+                  <h3 className="text-lg font-bold text-white">Contact Information</h3>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-gray-300">
+                      Email Address <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="bg-black/60 border-white/10 text-white placeholder:text-gray-500"
+                    />
+                    <p className="text-xs text-gray-500">Your license key will be sent to this email</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="discord" className="text-gray-300">
+                      Discord Username (Optional)
+                    </Label>
+                    <Input
+                      id="discord"
+                      type="text"
+                      placeholder="username#1234"
+                      value={discordUsername}
+                      onChange={(e) => setDiscordUsername(e.target.value)}
+                      className="bg-black/60 border-white/10 text-white placeholder:text-gray-500"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="notes" className="text-gray-300">
+                      Additional Notes (Optional)
+                    </Label>
+                    <Textarea
+                      id="notes"
+                      placeholder="Any special requests or questions..."
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      className="bg-black/60 border-white/10 text-white placeholder:text-gray-500 min-h-[100px]"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Additional Information */}
             <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
               <CardContent className="space-y-4 p-6">
-                <h3 className="text-lg font-bold text-white">Contact Information</h3>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-300">
-                    Email Address <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="bg-black/60 border-white/10 text-white placeholder:text-gray-500"
-                  />
-                  <p className="text-xs text-gray-500">Your license key will be sent to this email</p>
-                </div>
+                <h3 className="text-lg font-bold text-white">Additional Information</h3>
 
                 <div className="space-y-2">
                   <Label htmlFor="discord" className="text-gray-300">
@@ -256,9 +343,11 @@ export default function CheckoutPage() {
                   <p>1. Send ${total.toFixed(2)} USD to one of our payment methods:</p>
                   <div className="ml-4 space-y-2 rounded-lg bg-black/60 p-4">
                     <p className="font-semibold text-purple-400">PayPal:</p>
-                    <p className="text-gray-300">payments@fluorite.store</p>
-                    <p className="font-semibold text-purple-400 mt-3">Cryptocurrency:</p>
-                    <p className="text-gray-300">Contact support for wallet address</p>
+                    <p className="text-gray-300">Arsilarichars@gmail.com</p>
+                    <p className="font-semibold text-purple-400 mt-3">Zelle:</p>
+                    <p className="text-gray-300">9549313426 Maikol Ardila</p>
+                    <p className="font-semibold text-purple-400 mt-3">Nequi:</p>
+                    <p className="text-gray-300">3204417174</p>
                   </div>
                   <p>2. Take a screenshot of the transaction</p>
                   <p>3. Upload it above and submit this form</p>

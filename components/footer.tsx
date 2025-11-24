@@ -4,7 +4,7 @@ import Image from "next/image"
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 dark:bg-black bg-background">
+    <footer className="border-t border-white/10 bg-black">
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
@@ -18,7 +18,7 @@ export function Footer() {
                   className="object-cover"
                 />
               </div>
-              <span className="text-lg font-bold dark:text-white text-purple-600">Panel Hyper Soporte</span>
+              <span className="text-lg font-bold text-white">Panel Hyper Soporte</span>
             </div>
             <p className="text-sm text-gray-400">
               Premium gaming enhancements trusted by 1,800+ players worldwide. Undetected. Reliable. Professional.
@@ -29,7 +29,7 @@ export function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold dark:text-white text-purple-600">Follow Us</h3>
+            <h3 className="text-sm font-semibold text-white">Follow Us</h3>
             <div className="flex gap-4">
               <a href="https://www.facebook.com/share/1D7NixRGWv/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-500 transition-colors">
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@ export function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold dark:text-white text-purple-600">Quick Links</h3>
+            <h3 className="text-sm font-semibold text-white">Quick Links</h3>
             <div className="flex flex-col gap-2 text-sm">
               <Link href="/terms" className="text-gray-400 hover:text-white">
                 Terms

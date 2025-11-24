@@ -47,6 +47,7 @@ export async function saveOrder(formData: FormData) {
       total,
       proofImage,
       orderId,
+      key: null,
     }).returning({ id: orders.id })
 
     const orderDbId = orderResult[0].id
@@ -90,5 +91,36 @@ export async function getUserOrders() {
   } catch (error) {
     console.error('Get orders error:', error)
     return { error: 'Failed to get orders' }
+  }
+}
+
+export async function getAllOrders() {
+  try {
+    // Get all orders with items
+    const ordersWithItems = await db.query.orders.findMany({
+      orderBy: [desc(orders.createdAt)],
+      with: {
+        items: true,
+      },
+    })
+
+    return { success: true, orders: ordersWithItems }
+  } catch (error) {
+    console.error('Get all orders error:', error)
+    return { error: 'Failed to get orders' }
+  }
+}
+
+export async function updateOrder(orderId: string, key: string, status?: string) {
+  try {
+    const updateData: any = { key }
+    if (status) updateData.status = status
+
+    await db.update(orders).set(updateData).where(eq(orders.orderId, orderId))
+
+    return { success: true }
+  } catch (error) {
+    console.error('Update order error:', error)
+    return { error: 'Failed to update order' }
   }
 }

@@ -1,13 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Menu, Moon, Sun, ShoppingCart, User, LogOut } from "lucide-react"
 import { useCartStore } from "@/lib/cart-store"
 import { useMenuStore } from "@/lib/menu-store"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
+import { logoutUser } from "@/app/actions/auth"
 import Image from "next/image"
 
 export function Header() {
@@ -17,6 +18,7 @@ export function Header() {
   const [mounted, setMounted] = useState(false)
   const cartCount = items.length
   const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
@@ -96,14 +98,27 @@ export function Header() {
             </Button>
           </Link>
 
-          <Link href="/login">
-            <Button variant="outline" className="hidden md:flex border-white/10 text-white hover:bg-white/5 bg-transparent">
-              Logout
-            </Button>
-            <Button variant="ghost" size="icon" className="md:hidden text-gray-300 hover:text-white">
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            className="hidden md:flex border-white/10 text-white hover:bg-white/5 bg-transparent"
+            onClick={async () => {
+              await logoutUser()
+              router.push('/login')
+            }}
+          >
+            Logout
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden text-gray-300 hover:text-white"
+            onClick={async () => {
+              await logoutUser()
+              router.push('/login')
+            }}
+          >
+            <LogOut className="h-5 w-5" />
+          </Button>
         </div>
       </div>
     </header>

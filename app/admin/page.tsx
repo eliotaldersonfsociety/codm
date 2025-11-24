@@ -8,10 +8,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useState, useEffect } from "react"
-import { ShoppingCart, Mail, User, Clock, ImageIcon, Trash2 } from "lucide-react"
+import { ShoppingCart, Mail, User, Clock, ImageIcon, Trash2, Key } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { getCurrentUser } from "@/app/actions/auth"
-import { getUserOrders } from "@/app/actions/orders"
+import { getAllOrders, updateOrder } from "@/app/actions/orders"
 import { useRouter } from "next/navigation"
 
 interface Order {
@@ -29,6 +29,7 @@ interface Order {
   total: number
   proofImage: string
   timestamp: string
+  key?: string | null
 }
 
 export default function AdminPage() {
@@ -49,7 +50,7 @@ export default function AdminPage() {
     }
 
     // Load orders from database
-    const ordersResult = await getUserOrders()
+    const ordersResult = await getAllOrders()
     if (ordersResult.success) {
       // Transform database orders to the expected format
       const transformedOrders = ordersResult.orders.map(order => ({
@@ -68,7 +69,15 @@ export default function AdminPage() {
         proofImage: order.proofImage || '',
         timestamp: order.createdAt ? new Date(order.createdAt).toISOString() : new Date().toISOString(),
       }))
-      setOrders(transformedOrders.reverse())
+
+      // Load keys from localStorage
+      const storedOrders = JSON.parse(localStorage.getItem("orders") || "[]")
+      const ordersWithKeys = transformedOrders.map(order => {
+        const stored = storedOrders.find((s: any) => s.orderId === order.orderId)
+        return stored ? { ...order, key: stored.key } : order
+      })
+
+      setOrders(ordersWithKeys.reverse())
     }
 
     setLoading(false)
@@ -83,9 +92,40 @@ export default function AdminPage() {
     }
   }
 
+  const updateOrderKey = async (orderId: string, key: string) => {
+    const result = await updateOrder(orderId, key, key ? 'completed' : 'pending')
+    if (result.success) {
+      // Reload orders
+      const ordersResult = await getAllOrders()
+      if (ordersResult.success) {
+        const transformedOrders = ordersResult.orders.map(order => ({
+          orderId: order.orderId,
+          email: order.email,
+          discordUsername: order.discordUsername || '',
+          notes: order.notes || '',
+          items: order.items.map(item => ({
+            id: item.id.toString(),
+            name: `${item.game} - ${item.duration}`,
+            game: item.game,
+            duration: item.duration,
+            price: item.price,
+          })),
+          total: order.total,
+          proofImage: order.proofImage || '',
+          timestamp: order.createdAt ? new Date(order.createdAt).toISOString() : new Date().toISOString(),
+          key: order.key,
+        }))
+        setOrders(transformedOrders.reverse())
+        setSelectedOrder({ ...selectedOrder!, key })
+      }
+    } else {
+      alert('Failed to update key')
+    }
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 pt-32 pb-20">
           <div className="text-center text-white">Loading...</div>
@@ -96,12 +136,12 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <div className="container mx-auto px-4 pt-32 pb-20">
+      <div className="container mx-auto px-4 pt-32 pb-20 flex-1">
         <div className="mb-8">
-          <h1 className="mb-4 text-4xl font-bold text-white">
+          <h1 className="mb-4 text-4xl font-bold dark:text-white text-purple-600">
             Admin{" "}
             <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
               Dashboard
@@ -116,17 +156,17 @@ export default function AdminPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Total Orders</p>
-                <p className="text-3xl font-bold text-white">{orders.length}</p>
+                <p className="text-3xl font-bold text-foreground dark:text-white">{orders.length}</p>
               </div>
               <ShoppingCart className="h-12 w-12 text-purple-400" />
             </div>
           </Card>
 
-          <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black p-6">
+          <Card className="border-purple-500/20 dark:bg-black bg-white p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Total Revenue</p>
-                <p className="text-3xl font-bold text-white">
+                <p className="text-3xl font-bold text-foreground dark:text-white">
                   ${orders.reduce((sum, order) => sum + order.total, 0).toFixed(2)}
                 </p>
               </div>
@@ -141,11 +181,11 @@ export default function AdminPage() {
             </div>
           </Card>
 
-          <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black p-6">
+          <Card className="border-purple-500/20 dark:bg-black bg-white p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Today's Orders</p>
-                <p className="text-3xl font-bold text-white">
+                <p className="text-3xl font-bold text-foreground dark:text-white">
                   {
                     orders.filter((order) => {
                       const orderDate = new Date(order.timestamp)
@@ -161,9 +201,9 @@ export default function AdminPage() {
         </div>
 
         {/* Orders List */}
-        <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+        <Card className="border-purple-500/20 dark:bg-black bg-white">
           <CardContent className="p-6">
-            <h2 className="mb-6 text-xl font-bold text-white">Recent Orders</h2>
+            <h2 className="mb-6 text-xl font-bold dark:text-white text-purple-600">Recent Orders</h2>
 
             {orders.length === 0 ? (
               <div className="py-12 text-center text-gray-400">No orders yet</div>
@@ -172,7 +212,7 @@ export default function AdminPage() {
                 {orders.map((order) => (
                   <div
                     key={order.orderId}
-                    className="rounded-lg border border-white/10 bg-black/40 p-4 transition-colors hover:bg-black/60 cursor-pointer"
+                    className="rounded-lg border border-white/10 dark:bg-black/40 dark:hover:bg-black/60 bg-gray-50 hover:bg-gray-100 cursor-pointer"
                     onClick={() => setSelectedOrder(order)}
                   >
                     <div className="flex items-start justify-between">
@@ -220,15 +260,15 @@ export default function AdminPage() {
 
       {/* Order Details Dialog */}
       <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border-purple-500/20">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto dark:bg-[#0a0a0a] bg-white border-purple-500/20">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white">Order Details</DialogTitle>
+            <DialogTitle className="text-2xl font-bold dark:text-white text-purple-600">Order Details</DialogTitle>
           </DialogHeader>
 
           {selectedOrder && (
             <div className="space-y-6">
               {/* Order Info */}
-              <div className="rounded-lg border border-white/10 bg-black/40 p-4">
+              <div className="rounded-lg border border-white/10 dark:bg-black/40 bg-gray-50 p-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <p className="text-sm text-gray-400">Order ID</p>
@@ -257,8 +297,8 @@ export default function AdminPage() {
               </div>
 
               {/* Items */}
-              <div className="rounded-lg border border-white/10 bg-black/40 p-4">
-                <h3 className="mb-4 font-semibold text-white">Items</h3>
+              <div className="rounded-lg border border-white/10 dark:bg-black/40 bg-gray-50 p-4">
+                <h3 className="mb-4 font-semibold dark:text-white text-purple-600">Items</h3>
                 <div className="space-y-2">
                   {selectedOrder.items.map((item, idx) => (
                     <div key={idx} className="flex justify-between text-sm">
@@ -278,10 +318,10 @@ export default function AdminPage() {
               </div>
 
               {/* Payment Proof */}
-              <div className="rounded-lg border border-white/10 bg-black/40 p-4">
+              <div className="rounded-lg border border-white/10 dark:bg-black/40 bg-gray-50 p-4">
                 <div className="mb-4 flex items-center gap-2">
                   <ImageIcon className="h-5 w-5 text-purple-400" />
-                  <h3 className="font-semibold text-white">Payment Proof</h3>
+                  <h3 className="font-semibold dark:text-white text-purple-600">Payment Proof</h3>
                 </div>
                 <div className="overflow-hidden rounded-lg border border-white/10">
                   <img
@@ -290,6 +330,27 @@ export default function AdminPage() {
                     className="w-full object-contain"
                   />
                 </div>
+              </div>
+
+              {/* License Key */}
+              <div className="rounded-lg border border-white/10 dark:bg-black/40 bg-gray-50 p-4">
+                <div className="mb-4 flex items-center gap-2">
+                  <Key className="h-5 w-5 text-purple-400" />
+                  <h3 className="font-semibold dark:text-white text-purple-600">License Key</h3>
+                </div>
+                <input
+                  type="text"
+                  value={selectedOrder.key || ""}
+                  onChange={(e) => setSelectedOrder({ ...selectedOrder!, key: e.target.value })}
+                  placeholder="Enter license key"
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <Button
+                  onClick={() => updateOrderKey(selectedOrder.orderId, selectedOrder.key || "")}
+                  className="mt-2 w-full bg-purple-600 hover:bg-purple-700"
+                >
+                  Update Key
+                </Button>
               </div>
 
               {/* Actions */}
@@ -305,7 +366,7 @@ export default function AdminPage() {
                 <Button
                   onClick={() => setSelectedOrder(null)}
                   variant="outline"
-                  className="flex-1 border-white/10 bg-black/40 text-white hover:bg-white/5"
+                  className="flex-1 border-white/10 dark:bg-black/40 dark:text-white dark:hover:bg-white/5 bg-gray-50 text-purple-600 hover:bg-gray-100"
                 >
                   Close
                 </Button>

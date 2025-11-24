@@ -18,8 +18,9 @@ export const orders = sqliteTable('orders', {
   discordUsername: text('discord_username'),
   notes: text('notes'),
   total: real('total').notNull(),
-  proofImage: text('proof_image'), // base64 encoded image
+  proofImage: text('proof_image'), // image URL
   status: text('status').$defaultFn(() => 'pending'), // pending, processing, completed, cancelled
+  key: text('key'), // license key
   orderId: text('order_id').unique().notNull(),
   createdAt: integer('created_at').$defaultFn(() => Math.floor(Date.now() / 1000)),
 });

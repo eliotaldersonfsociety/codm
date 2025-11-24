@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { registerUser } from "@/app/actions/auth"
 
 export default function SignupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/dashboard'
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -40,8 +42,8 @@ export default function SignupPage() {
       return
     }
 
-    // Since new users are always 'user' role, redirect to dashboard
-    router.push("/dashboard")
+    // Redirect to the specified redirect or dashboard
+    router.push(redirect)
   }
 
   return (

@@ -127,7 +127,7 @@ export default function HomePage() {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Mobile Legends Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+            <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute left-4 top-4 bg-purple-600 text-white">Most Popular</Badge>
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">Updating</Badge>
@@ -179,7 +179,7 @@ export default function HomePage() {
             </Card>
 
             {/* Free Fire Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+            <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">Testing</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$26.99/month</Badge>
@@ -221,7 +221,7 @@ export default function HomePage() {
             </Card>
 
             {/* CODM Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black">
+            <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">Updating</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$25/month</Badge>
@@ -260,7 +260,7 @@ export default function HomePage() {
               </CardContent>
             </Card>
             {/* PUBG Card */}
-            <Card className="overflow-hidden border-purple-500/20">
+            <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
@@ -302,7 +302,7 @@ export default function HomePage() {
             </Card>
 
             {/* Arena Breakout Card */}
-            <Card className="overflow-hidden border-purple-500/20">
+            <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
@@ -344,7 +344,7 @@ export default function HomePage() {
             </Card>
 
             {/* Delta Force Card */}
-            <Card className="overflow-hidden border-purple-500/20">
+            <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>

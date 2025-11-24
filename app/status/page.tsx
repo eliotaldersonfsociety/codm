@@ -20,7 +20,7 @@ export default function StatusPage() {
           </div>
 
           <div className="mx-auto max-w-4xl">
-            <Card className="border-white/10 bg-white dark:bg-gradient-to-br dark:from-gray-900/50 dark:to-black">
+            <Card className="border-white/10 bg-white dark:bg-black">
               <CardContent className="p-8">
                 <div className="mb-6 flex items-center justify-between">
                   <div>
