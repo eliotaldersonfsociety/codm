@@ -7,14 +7,20 @@ import { Menu, Moon, Sun, ShoppingCart, User, LogOut } from "lucide-react"
 import { useCartStore } from "@/lib/cart-store"
 import { useMenuStore } from "@/lib/menu-store"
 import { useTheme } from "next-themes"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 
 export function Header() {
   const { items, openCart } = useCartStore()
   const { openMenu } = useMenuStore()
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const cartCount = items.length
   const pathname = usePathname()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 border-b border-white/10 bg-black/80 backdrop-blur-sm">
@@ -77,9 +83,11 @@ export function Header() {
             )}
           </Button>
 
-          <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
+          {mounted && (
+            <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+          )}
 
           <Link href="/dashboard">
             <Button className="hidden md:flex bg-purple-600 text-white hover:bg-purple-700">Dashboard</Button>
