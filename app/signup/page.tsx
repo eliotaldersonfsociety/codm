@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from 'next/navigation'
 import { registerUser } from "@/app/actions/auth"
 
@@ -47,7 +47,8 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="min-h-screen bg-black">
       <Header />
 
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 pt-16">
@@ -139,5 +140,6 @@ export default function SignupPage() {
 
       <Footer />
     </div>
+    </Suspense>
   )
 }
