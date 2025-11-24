@@ -260,7 +260,7 @@ export default function HomePage() {
               </CardContent>
             </Card>
             {/* PUBG Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-white">
+            <Card className="overflow-hidden border-purple-500/20">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
@@ -302,7 +302,7 @@ export default function HomePage() {
             </Card>
 
             {/* Arena Breakout Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-white">
+            <Card className="overflow-hidden border-purple-500/20">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
@@ -344,7 +344,7 @@ export default function HomePage() {
             </Card>
 
             {/* Delta Force Card */}
-            <Card className="overflow-hidden border-purple-500/20 bg-white">
+            <Card className="overflow-hidden border-purple-500/20">
               <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
