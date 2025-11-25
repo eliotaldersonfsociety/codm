@@ -221,8 +221,8 @@ export default function AdminPage() {
         </div>
 
         {/* Stats */}
-        <div className="mb-8 grid gap-6 md:grid-cols-3">
-          <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black p-6">
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Total Orders</p>
@@ -282,15 +282,16 @@ export default function AdminPage() {
                 {currentOrders.map((order) => (
                   <div
                     key={order.orderId}
-                    className="rounded-lg border border-white/10 dark:bg-black/40 dark:hover:bg-black/60 bg-gray-50 hover:bg-gray-100 cursor-pointer"
+                    className="rounded-lg border border-white/10 dark:bg-black/40 dark:hover:bg-black/60 bg-gray-50 hover:bg-gray-100 cursor-pointer p-4"
                     onClick={() => setSelectedOrder(order)}
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="mb-2 flex items-center gap-3">
-                          <Badge className="bg-purple-600 text-white">{order.orderId}</Badge>
+                    <div className="flex flex-col gap-3">
+                      {/* Header with ID, Status, Date */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Badge className="bg-purple-600 text-white text-xs">{order.orderId}</Badge>
                           <Badge
-                            className={`${
+                            className={`text-xs ${
                               order.status === 'paid' ? 'bg-green-600' :
                               order.status === 'invalid_capture' ? 'bg-red-600' :
                               order.status === 'completed' ? 'bg-blue-600' :
@@ -304,40 +305,49 @@ export default function AdminPage() {
                              order.status === 'cancelled' ? 'Cancelled' :
                              'Pending'}
                           </Badge>
-                          <span className="text-sm text-gray-400">
-                            {order.timestamp && new Date(order.timestamp).getTime() > 1577836800000
-                              ? new Date(order.timestamp).toLocaleString()
-                              : 'Date not available'
-                            }
-                          </span>
                         </div>
+                        <span className="text-xs text-gray-400">
+                          {order.timestamp && new Date(order.timestamp).getTime() > 1577836800000
+                            ? new Date(order.timestamp).toLocaleDateString()
+                            : 'Date not available'
+                          }
+                        </span>
+                      </div>
 
-                        <div className="mb-2 flex items-center gap-2 text-sm text-gray-300">
-                          <Mail className="h-4 w-4" />
-                          {order.email}
+                      {/* Contact Info */}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-sm text-gray-300">
+                          <Mail className="h-3 w-3 flex-shrink-0" />
+                          <span className="truncate text-xs">{order.email}</span>
                         </div>
-
                         {order.discordUsername && (
-                          <div className="mb-2 flex items-center gap-2 text-sm text-gray-300">
-                            <User className="h-4 w-4" />
-                            {order.discordUsername}
+                          <div className="flex items-center gap-2 text-sm text-gray-300">
+                            <User className="h-3 w-3 flex-shrink-0" />
+                            <span className="truncate text-xs">{order.discordUsername}</span>
                           </div>
                         )}
+                      </div>
 
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {order.items.map((item, idx) => (
-                            <Badge key={idx} variant="secondary" className="bg-white/5 text-gray-300">
+                      {/* Items and Price */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-wrap gap-1 flex-1 mr-2">
+                          {order.items.slice(0, 2).map((item, idx) => (
+                            <Badge key={idx} variant="secondary" className="bg-white/5 text-gray-300 text-xs">
                               {item.game} - {item.duration}
                             </Badge>
                           ))}
+                          {order.items.length > 2 && (
+                            <Badge variant="secondary" className="bg-white/5 text-gray-300 text-xs">
+                              +{order.items.length - 2} more
+                            </Badge>
+                          )}
                         </div>
-                      </div>
-
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-purple-400">${order.total.toFixed(2)}</div>
-                        <Button variant="ghost" size="sm" className="mt-2 text-purple-400 hover:text-purple-300">
-                          View Details
-                        </Button>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className="text-sm font-bold text-purple-400">${order.total.toFixed(2)}</span>
+                          <Button variant="ghost" size="sm" className="text-purple-400 hover:text-purple-300 px-2 py-1 h-auto text-xs">
+                            Details
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -354,34 +364,9 @@ export default function AdminPage() {
 
             <div className="space-y-4">
               {gameStatuses.map((gameStatus) => (
-                <div key={gameStatus.game} className="flex items-center justify-between rounded-lg bg-white/5 p-4">
-                  <div className="flex items-center gap-4">
-                    <span className="font-semibold dark:text-white text-purple-600">{gameStatus.game}</span>
-                    <input
-                      type="text"
-                      value={gameStatus.version || 'v1.0.0'}
-                      onChange={(e) => {
-                        const updated = gameStatuses.map(gs =>
-                          gs.game === gameStatus.game ? { ...gs, version: e.target.value } : gs
-                        )
-                        setGameStatuses(updated)
-                      }}
-                      className="px-2 py-1 bg-gray-800 border border-gray-600 rounded text-white text-sm w-20"
-                      placeholder="v1.0.0"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <select
-                      value={gameStatus.status || 'Safe to use'}
-                      onChange={(e) => handleUpdateGameStatus(gameStatus.game, e.target.value, gameStatus.version || 'v1.0.0')}
-                      className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-white text-sm"
-                    >
-                      <option value="Testing">Testing</option>
-                      <option value="Detected">Detected</option>
-                      <option value="Use at your own risk">Use at your own risk</option>
-                      <option value="Updating">Updating</option>
-                      <option value="Safe to use">Safe to use</option>
-                    </select>
+                <div key={gameStatus.game} className="space-y-3 rounded-lg bg-white/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold dark:text-white text-purple-600 text-sm sm:text-base">{gameStatus.game}</span>
                     <div className="flex gap-1">
                       {Array.from({ length: 2 }, (_, i) => (
                         <div
@@ -398,6 +383,32 @@ export default function AdminPage() {
                       ))}
                     </div>
                   </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="text"
+                      value={gameStatus.version || 'v1.0.0'}
+                      onChange={(e) => {
+                        const updated = gameStatuses.map(gs =>
+                          gs.game === gameStatus.game ? { ...gs, version: e.target.value } : gs
+                        )
+                        setGameStatuses(updated)
+                      }}
+                      className="px-2 py-1 bg-gray-800 border border-gray-600 rounded text-white text-sm flex-1 sm:flex-none sm:w-20"
+                      placeholder="v1.0.0"
+                    />
+                    <select
+                      value={gameStatus.status || 'Safe to use'}
+                      onChange={(e) => handleUpdateGameStatus(gameStatus.game, e.target.value, gameStatus.version || 'v1.0.0')}
+                      className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-white text-sm flex-1"
+                    >
+                      <option value="Testing">Testing</option>
+                      <option value="Detected">Detected</option>
+                      <option value="Use at your own risk">Use at your own risk</option>
+                      <option value="Updating">Updating</option>
+                      <option value="Safe to use">Safe to use</option>
+                    </select>
+                  </div>
                 </div>
               ))}
             </div>
@@ -406,11 +417,11 @@ export default function AdminPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-6">
-            <div className="text-sm text-gray-400">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6">
+            <div className="text-sm text-gray-400 text-center sm:text-left">
               Showing {startIndex + 1} to {Math.min(endIndex, orders.length)} of {orders.length} orders
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -421,7 +432,7 @@ export default function AdminPage() {
                 Previous
               </Button>
 
-              <div className="flex gap-1">
+              <div className="flex gap-1 overflow-x-auto">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <Button
                     key={page}
@@ -455,7 +466,7 @@ export default function AdminPage() {
 
       {/* Order Details Dialog */}
       <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto dark:bg-[#0a0a0a] bg-white border-purple-500/20">
+        <DialogContent className="max-w-3xl w-[95vw] max-h-[90vh] overflow-y-auto dark:bg-[#0a0a0a] bg-white border-purple-500/20">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold dark:text-white text-purple-600">Order Details</DialogTitle>
           </DialogHeader>
@@ -464,7 +475,7 @@ export default function AdminPage() {
             <div className="space-y-6">
               {/* Order Info */}
               <div className="rounded-lg border border-white/10 dark:bg-black/40 bg-gray-50 p-4">
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <p className="text-sm text-gray-400">Order ID</p>
                     <p className="font-semibold text-white">{selectedOrder.orderId}</p>
@@ -568,7 +579,7 @@ export default function AdminPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   onClick={() => deleteOrder(selectedOrder.orderId)}
                   variant="destructive"
