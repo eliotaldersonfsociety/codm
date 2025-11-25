@@ -91,10 +91,6 @@ export default function HomePage() {
                     Buy Now
                   </Button>
                 </Link>
-                <Button variant="outline" className="gap-2 border-white/20 bg-transparent text-white hover:bg-white/5">
-                  <Play className="h-4 w-4" />
-                  Watch Demo
-                </Button>
               </div>
             </div>
 
@@ -163,18 +159,12 @@ export default function HomePage() {
                     </Badge>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Link href="/mlbb" className="flex-1">
-                    <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      buy
-                    </Button>
-                  </Link>
-                  <Button variant="outline" className="flex-1 border-white/20 bg-transparent hover:bg-white/5">
-                    <Play className="mr-2 h-4 w-4" />
-                    Demo
+                <Link href="/mlbb" className="block">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    buy
                   </Button>
-                </div>
+                </Link>
               </CardContent>
             </Card>
 
@@ -742,12 +732,14 @@ export default function HomePage() {
           <div className="mt-12 text-center">
             <Card className="mx-auto max-w-xl border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/10 dark:to-black p-8">
               <h3 className="mb-4 text-xl font-bold dark:text-white text-purple-600">Still have questions?</h3>
-              <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-                </svg>
-                Join Our Discord
-              </Button>
+              <Link href="https://discord.gg/h89Y27uBu" target="_blank">
+                <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+                  </svg>
+                  Join Our Discord
+                </Button>
+              </Link>
             </Card>
           </div>
         </div>
