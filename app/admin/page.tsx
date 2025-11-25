@@ -11,7 +11,7 @@ import { useState, useEffect } from "react"
 import { ShoppingCart, Mail, User, Clock, ImageIcon, Trash2, Key } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { getCurrentUser, getGameStatuses, updateGameStatus } from "@/app/actions/auth"
-import { getAllOrders, updateOrder } from "@/app/actions/orders"
+import { getAllOrders, updateOrder, deleteOrder } from "@/app/actions/orders"
 import { useRouter } from "next/navigation"
 import { NavigationMenu } from "@/components/navigation-menu"
 import { ShoppingCartModal } from "@/components/shopping-cart"
@@ -121,12 +121,38 @@ export default function AdminPage() {
     setLoading(false)
   }
 
-  const deleteOrder = (orderId: string) => {
+  const handleDeleteOrder = async (orderId: string) => {
     if (confirm("Are you sure you want to delete this order?")) {
-      const updatedOrders = orders.filter((order) => order.orderId !== orderId)
-      localStorage.setItem("orders", JSON.stringify(updatedOrders.reverse()))
-      setOrders(updatedOrders)
-      setSelectedOrder(null)
+      const result = await deleteOrder(orderId)
+      if (result.success) {
+        // Reload orders from database
+        const ordersResult = await getAllOrders()
+        if (ordersResult.success) {
+          const transformedOrders = ordersResult.orders.map(order => ({
+            orderId: order.orderId,
+            email: order.email,
+            discordUsername: order.discordUsername || '',
+            notes: order.notes || '',
+            items: order.items.map(item => ({
+              id: item.id.toString(),
+              name: `${item.game} - ${item.duration}`,
+              game: item.game,
+              duration: item.duration,
+              price: item.price,
+            })),
+            total: order.total,
+            proofImage: order.proofImage || '',
+            timestamp: order.createdAt ? new Date(order.createdAt * 1000).toISOString() : new Date().toISOString(),
+            status: order.status || 'pending',
+            key: order.key,
+          }))
+          setOrders(transformedOrders.reverse())
+          setSelectedOrder(null)
+          alert('Order deleted successfully')
+        }
+      } else {
+        alert('Failed to delete order')
+      }
     }
   }
 
@@ -222,7 +248,7 @@ export default function AdminPage() {
 
         {/* Stats */}
         <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black p-4 sm:p-6">
+          <Card className="border-purple-500/20 bg-gradient-to-br from-purple-900/10 to-black p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Total Orders</p>
@@ -581,7 +607,7 @@ export default function AdminPage() {
               {/* Actions */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
-                  onClick={() => deleteOrder(selectedOrder.orderId)}
+                  onClick={() => handleDeleteOrder(selectedOrder.orderId)}
                   variant="destructive"
                   className="flex-1 gap-2"
                 >

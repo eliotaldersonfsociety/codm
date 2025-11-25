@@ -124,3 +124,27 @@ export async function updateOrder(orderId: string, key: string, status?: string)
     return { error: 'Failed to update order' }
   }
 }
+
+export async function deleteOrder(orderId: string) {
+  try {
+    // Find the order to get its id
+    const order = await db.query.orders.findFirst({
+      where: eq(orders.orderId, orderId),
+    })
+
+    if (!order) {
+      return { error: 'Order not found' }
+    }
+
+    // Delete order items first
+    await db.delete(orderItems).where(eq(orderItems.orderId, order.id))
+
+    // Then delete the order
+    await db.delete(orders).where(eq(orders.id, order.id))
+
+    return { success: true }
+  } catch (error) {
+    console.error('Delete order error:', error)
+    return { error: 'Failed to delete order' }
+  }
+}

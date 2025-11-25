@@ -17,7 +17,7 @@ export async function sendContactEmail(formData: FormData) {
   try {
     const { data, error } = await resend.emails.send({
       from: 'Panel Hyper Soporte <noreply@hypersoporte.com>',
-      to: 'arsilarichars@gmail.com',
+      to: 'rennyardiladev@gmail.com',
       subject: `Contact Form: ${subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
