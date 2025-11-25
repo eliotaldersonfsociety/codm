@@ -93,8 +93,8 @@ export default function CheckoutPage() {
         return
       }
 
-      setSubmitted(true)
       clearCart()
+      setSubmitted(true)
 
       // Redirect after 3 seconds
       setTimeout(() => {
