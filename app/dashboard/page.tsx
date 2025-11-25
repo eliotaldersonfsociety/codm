@@ -1,3 +1,5 @@
+"use client"
+
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -8,20 +10,66 @@ import { getCurrentUser, logoutUser } from "@/app/actions/auth"
 import { getUserOrders } from "@/app/actions/orders"
 import { redirect } from "next/navigation"
 import Image from "next/image"
+import { NavigationMenu } from "@/components/navigation-menu"
+import { ShoppingCartModal } from "@/components/shopping-cart"
+import { useState, useEffect } from "react"
 
-export default async function DashboardPage() {
-  const user = await getCurrentUser()
+export default function DashboardPage() {
+  const [user, setUser] = useState<any>(null)
+  const [orders, setOrders] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const ordersPerPage = 10
+  const totalPages = Math.ceil(orders.length / ordersPerPage)
+  const startIndex = (currentPage - 1) * ordersPerPage
+  const endIndex = startIndex + ordersPerPage
+  const currentOrders = orders.slice(startIndex, endIndex)
+
+  useEffect(() => {
+    const loadData = async () => {
+      const currentUser = await getCurrentUser()
+      if (!currentUser) {
+        redirect('/login')
+        return
+      }
+      if (currentUser.role === 'admin') {
+        redirect('/admin')
+        return
+      }
+      setUser(currentUser)
+
+      const ordersResult = await getUserOrders()
+      const allOrders = ordersResult.success ? ordersResult.orders : []
+      const userOrders = allOrders.filter(order => order.email === currentUser.email).reverse()
+      setOrders(userOrders)
+      setLoading(false)
+    }
+    loadData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 pt-32 pb-20">
+          <div className="text-center text-white">Loading...</div>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
+
   if (!user) {
     redirect('/login')
   }
 
-  const ordersResult = await getUserOrders()
-  const allOrders = ordersResult.success ? ordersResult.orders : []
-  const orders = allOrders.filter(order => order.email === user.email).reverse()
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+      <ShoppingCartModal />
+      <NavigationMenu />
+
       <div className="container mx-auto px-4 pt-32 pb-12">
         <h1 className="mb-8 text-3xl font-bold dark:text-white text-purple-600">Dashboard</h1>
 
@@ -36,7 +84,12 @@ export default async function DashboardPage() {
                 </div>
                 <div className="text-center">
                   <h3 className="text-xl font-bold text-white">{user.email}</h3>
-                  <p className="text-sm text-gray-400">Member since {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Unknown'}</p>
+                  <p className="text-sm text-gray-400">
+                    Member since {user.createdAt && user.createdAt > 0
+                      ? new Date(user.createdAt * 1000).toLocaleDateString()
+                      : 'Date not available'
+                    }
+                  </p>
                 </div>
               </div>
             </div>
@@ -57,7 +110,7 @@ export default async function DashboardPage() {
                   <p className="text-sm text-gray-400">View and manage your product licenses.</p>
                 </div>
 
-                {orders.length === 0 ? (
+                {currentOrders.length === 0 ? (
                   /* Empty State */
                   <Card className="border-white/10 dark:bg-black/50 bg-gray-50">
                     <CardContent className="flex flex-col items-center justify-center py-16">
@@ -77,7 +130,7 @@ export default async function DashboardPage() {
                   </Card>
                 ) : (
                   <div className="space-y-4">
-                    {orders.map((order) => (
+                    {currentOrders.map((order) => (
                       <Card key={order.id} className="border-white/10 dark:bg-black/50 bg-gray-50">
                         <CardContent className="p-6">
                         <div className="flex items-center justify-between mb-4">
@@ -86,16 +139,21 @@ export default async function DashboardPage() {
                             <h3 className="text-lg font-bold text-white">Order {order.orderId}</h3>
                           </div>
                           <span className={`px-2 py-1 rounded text-xs font-medium ${
-                            order.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
-                            order.status === 'processing' ? 'bg-blue-500/20 text-blue-400' :
-                            order.status === 'completed' ? 'bg-green-500/20 text-green-400' :
-                            'bg-red-500/20 text-red-400'
+                            order.status === 'paid' ? 'bg-green-500/20 text-green-400' :
+                            order.status === 'invalid_capture' ? 'bg-red-500/20 text-red-400' :
+                            order.status === 'completed' ? 'bg-blue-500/20 text-blue-400' :
+                            order.status === 'cancelled' ? 'bg-gray-500/20 text-gray-400' :
+                            'bg-yellow-500/20 text-yellow-400'
                           }`}>
-                            {order.status || 'pending'}
+                            {order.status === 'paid' ? 'Paid' :
+                             order.status === 'invalid_capture' ? 'Invalid Capture' :
+                             order.status === 'completed' ? 'Completed' :
+                             order.status === 'cancelled' ? 'Cancelled' :
+                             'Pending'}
                           </span>
                         </div>
                           <div className="space-y-2 mb-4">
-                            {order.items.map((item) => (
+                            {(order.items as { id: string; game: string; duration: string; price: number }[]).map((item) => (
                               <div key={item.id} className="flex justify-between text-sm">
                                 <span className="text-gray-400">{item.game} - {item.duration}</span>
                                 <span className="text-purple-400">${item.price.toFixed(2)}</span>
@@ -120,7 +178,10 @@ export default async function DashboardPage() {
                             </div>
                           </div>
                           <p className="text-xs text-gray-500">
-                            Ordered on {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'Unknown'}
+                            Created at: {order.createdAt && order.createdAt > 0
+                              ? new Date(order.createdAt * 1000).toLocaleString()
+                              : 'Date not available'
+                            }
                           </p>
                         </CardContent>
                       </Card>
@@ -129,6 +190,54 @@ export default async function DashboardPage() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-6">
+                <div className="text-sm text-gray-400">
+                  Showing {startIndex + 1} to {Math.min(endIndex, orders.length)} of {orders.length} orders
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="border-white/10 dark:bg-black/40 dark:text-white dark:hover:bg-white/5 bg-gray-50 text-purple-600 hover:bg-gray-100"
+                  >
+                    Previous
+                  </Button>
+
+                  <div className="flex gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className={
+                          currentPage === page
+                            ? "bg-purple-600 text-white"
+                            : "border-white/10 dark:bg-black/40 dark:text-white dark:hover:bg-white/5 bg-gray-50 text-purple-600 hover:bg-gray-100"
+                        }
+                      >
+                        {page}
+                      </Button>
+                    ))}
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="border-white/10 dark:bg-black/40 dark:text-white dark:hover:bg-white/5 bg-gray-50 text-purple-600 hover:bg-gray-100"
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

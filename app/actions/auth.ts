@@ -2,11 +2,12 @@
 
 import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
-import { users } from '@/lib/schema'
+import { users, gameStatuses } from '@/lib/schema'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { eq } from 'drizzle-orm'
 import crypto from 'crypto'
+import { Resend } from 'resend'
 
 export async function registerUser(formData: FormData) {
   const email = formData.get('email') as string
@@ -244,9 +245,34 @@ export async function requestPasswordReset(formData: FormData) {
       })
       .where(eq(users.email, email))
 
-    // In a real app, send email here
-    console.log(`Password reset token for ${email}: ${resetToken}`)
-    console.log(`Reset link: /reset-password?token=${resetToken}`)
+    // Send email with resend
+    const resend = new Resend(process.env.RESEND_API_KEY)
+
+    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`
+
+    const { data, error } = await resend.emails.send({
+      from: 'Panel Hyper Soporte <noreply@hypersoporte.com>',
+      to: [email],
+      subject: 'Reset your password',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #9333ea;">Reset your password</h2>
+          <p>You requested a password reset for your Panel HyperPlay account.</p>
+          <p>Click the link below to reset your password:</p>
+          <a href="${resetLink}" style="background-color: #9333ea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 16px 0;">Reset Password</a>
+          <p>This link will expire in 15 minutes.</p>
+          <p>If you didn't request this password reset, please ignore this email.</p>
+          <p>Best regards,<br>Panel HyperPlay Team</p>
+        </div>
+      `,
+    })
+
+    if (error) {
+      console.error('Failed to send email:', error)
+      return { error: 'Failed to send reset email' }
+    }
+
+    console.log('Password reset email sent to:', email)
 
     return {
       success: true,
@@ -328,5 +354,48 @@ export async function validateResetToken(token: string) {
   } catch (error) {
     console.error('Token validation error:', error)
     return { valid: false }
+  }
+}
+
+export async function getGameStatuses() {
+  try {
+    const result = await db.select().from(gameStatuses).orderBy(gameStatuses.game)
+    return { success: true, statuses: result }
+  } catch (error) {
+    console.error('Get game statuses error:', error)
+    return { error: 'Failed to get game statuses' }
+  }
+}
+
+export async function updateGameStatus(game: string, status: string, version?: string) {
+  const currentUser = await getCurrentUser()
+  if (!currentUser || currentUser.role !== 'admin') {
+    return { error: 'Unauthorized' }
+  }
+
+  const validStatuses = ['Testing', 'Detected', 'Use at your own risk', 'Updating', 'Safe to use']
+  if (!validStatuses.includes(status)) {
+    return { error: 'Invalid status' }
+  }
+
+  try {
+    await db.insert(gameStatuses).values({
+      game,
+      status,
+      version: version || 'v1.0.0',
+      updatedAt: Math.floor(Date.now() / 1000),
+    }).onConflictDoUpdate({
+      target: gameStatuses.game,
+      set: {
+        status,
+        version: version || undefined,
+        updatedAt: Math.floor(Date.now() / 1000),
+      },
+    })
+
+    return { success: true }
+  } catch (error) {
+    console.error('Update game status error:', error)
+    return { error: 'Failed to update game status' }
   }
 }

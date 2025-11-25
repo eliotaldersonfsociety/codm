@@ -9,6 +9,9 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { resetPassword, validateResetToken } from "@/app/actions/auth"
+import Image from "next/image"
+import { NavigationMenu } from "@/components/navigation-menu"
+import { ShoppingCartModal } from "@/components/shopping-cart"
 
 export default function ResetPasswordContent() {
   const router = useRouter()
@@ -84,6 +87,8 @@ export default function ResetPasswordContent() {
     return (
       <div className="min-h-screen bg-black">
         <Header />
+        <ShoppingCartModal />
+        <NavigationMenu />
         <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 pt-16">
           <div className="text-white">Validating token...</div>
         </div>
@@ -96,6 +101,8 @@ export default function ResetPasswordContent() {
     return (
       <div className="min-h-screen bg-black">
         <Header />
+        <ShoppingCartModal />
+        <NavigationMenu />
         <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 pt-16">
           <div className="w-full max-w-md space-y-8 text-center">
             <div className="text-red-400">{error}</div>
@@ -115,15 +122,21 @@ export default function ResetPasswordContent() {
   return (
     <div className="min-h-screen bg-black">
       <Header />
+      <ShoppingCartModal />
+      <NavigationMenu />
 
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 pt-16">
         <div className="w-full max-w-md space-y-8">
           {/* Logo */}
           <div className="flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-purple-700">
-              <svg className="h-10 w-10 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L4 7v10l8 5 8-5V7l-8-5zm0 2.18l5.5 3.44v6.76L12 17.82l-5.5-3.44V7.62L12 4.18z"/>
-              </svg>
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl overflow-hidden">
+              <Image
+                src="/icon.png"
+                alt="Logo"
+                width={64}
+                height={64}
+                className="object-cover"
+              />
             </div>
           </div>
 

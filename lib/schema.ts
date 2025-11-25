@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 export const users = sqliteTable('users', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -8,7 +8,7 @@ export const users = sqliteTable('users', {
   role: text('role').$defaultFn(() => 'user'), // user, admin
   resetToken: text('reset_token'),
   resetTokenExpires: integer('reset_token_expires'),
-  createdAt: integer('created_at').$defaultFn(() => Math.floor(Date.now() / 1000)),
+  createdAt: integer('created_at').notNull().default(sql`(strftime('%s','now'))`),
 });
 
 export const orders = sqliteTable('orders', {
@@ -22,7 +22,7 @@ export const orders = sqliteTable('orders', {
   status: text('status').$defaultFn(() => 'pending'), // pending, processing, completed, cancelled
   key: text('key'), // license key
   orderId: text('order_id').unique().notNull(),
-  createdAt: integer('created_at').$defaultFn(() => Math.floor(Date.now() / 1000)),
+  createdAt: integer('created_at').notNull().default(sql`(strftime('%s','now'))`),
 });
 
 export const orderItems = sqliteTable('order_items', {
@@ -31,6 +31,14 @@ export const orderItems = sqliteTable('order_items', {
   game: text('game').notNull(),
   duration: text('duration').notNull(),
   price: real('price').notNull(),
+});
+
+export const gameStatuses = sqliteTable('game_statuses', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  game: text('game').unique().notNull(),
+  status: text('status').$defaultFn(() => 'Safe to use'), // Testing, Detected, Use at your own risk, Updating, Safe to use
+  version: text('version').$defaultFn(() => 'v1.0.0'),
+  updatedAt: integer('updated_at').notNull().default(sql`(strftime('%s','now'))`),
 });
 
 // Relations

@@ -1,9 +1,63 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "8247e9f5-e0b7-43c9-80c3-030a12a8e432",
+  "id": "f3a0319b-8ffe-46ab-aa61-74353bdb2994",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "game_statuses": {
+      "name": "game_statuses",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "game": {
+          "name": "game",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version": {
+          "name": "version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s','now'))"
+        }
+      },
+      "indexes": {
+        "game_statuses_game_unique": {
+          "name": "game_statuses_game_unique",
+          "columns": [
+            "game"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "order_items": {
       "name": "order_items",
       "columns": {
@@ -122,6 +176,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "order_id": {
           "name": "order_id",
           "type": "text",
@@ -133,8 +194,9 @@
           "name": "created_at",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s','now'))"
         }
       },
       "indexes": {
@@ -189,12 +251,34 @@
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reset_token": {
+          "name": "reset_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reset_token_expires": {
+          "name": "reset_token_expires",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s','now'))"
         }
       },
       "indexes": {

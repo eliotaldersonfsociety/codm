@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { loginUser, getCurrentUser } from "@/app/actions/auth"
 import Image from "next/image"
 import { NavigationMenu } from "@/components/navigation-menu"
@@ -15,6 +15,8 @@ import { ShoppingCartModal } from "@/components/shopping-cart"
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get("redirect") || "/dashboard"
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -38,10 +40,10 @@ export default function LoginPage() {
       if (user.role === 'admin') {
         router.push("/admin")
       } else {
-        router.push("/dashboard")
+        router.push(redirect)
       }
     } else {
-      router.push("/dashboard") // fallback
+      router.push(redirect) // fallback
     }
   }
 
@@ -122,7 +124,7 @@ export default function LoginPage() {
               <p className="text-center text-sm text-gray-400">
                 Don't have an account?{" "}
                 <Link
-                  href="/signup"
+                  href={`/signup${redirect !== '/dashboard' ? `?redirect=${encodeURIComponent(redirect)}` : ''}`}
                   className="font-medium text-purple-400 hover:text-purple-300"
                 >
                   Sign up

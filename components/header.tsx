@@ -8,7 +8,7 @@ import { useCartStore } from "@/lib/cart-store"
 import { useMenuStore } from "@/lib/menu-store"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
-import { logoutUser } from "@/app/actions/auth"
+import { logoutUser, getCurrentUser } from "@/app/actions/auth"
 import Image from "next/image"
 
 export function Header() {
@@ -16,12 +16,18 @@ export function Header() {
   const { openMenu } = useMenuStore()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [user, setUser] = useState<any>(null)
   const cartCount = items.length
   const pathname = usePathname()
   const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
+    const loadUser = async () => {
+      const currentUser = await getCurrentUser()
+      setUser(currentUser)
+    }
+    loadUser()
   }, [])
 
   return (
@@ -94,7 +100,13 @@ export function Header() {
           <Link href="/dashboard">
             <Button className="hidden md:flex bg-purple-600 text-white hover:bg-purple-700">Dashboard</Button>
             <Button variant="ghost" size="icon" className="md:hidden text-gray-300 hover:text-white">
-              <User className="h-5 w-5" />
+              {user ? (
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-xs font-bold text-white">
+                  {user.email.charAt(0).toUpperCase()}
+                </div>
+              ) : (
+                <User className="h-5 w-5" />
+              )}
             </Button>
           </Link>
 

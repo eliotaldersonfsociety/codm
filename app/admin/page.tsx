@@ -10,9 +10,11 @@ import { Badge } from "@/components/ui/badge"
 import { useState, useEffect } from "react"
 import { ShoppingCart, Mail, User, Clock, ImageIcon, Trash2, Key } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { getCurrentUser } from "@/app/actions/auth"
+import { getCurrentUser, getGameStatuses, updateGameStatus } from "@/app/actions/auth"
 import { getAllOrders, updateOrder } from "@/app/actions/orders"
 import { useRouter } from "next/navigation"
+import { NavigationMenu } from "@/components/navigation-menu"
+import { ShoppingCartModal } from "@/components/shopping-cart"
 
 interface Order {
   orderId: string
@@ -30,13 +32,30 @@ interface Order {
   proofImage: string
   timestamp: string
   key?: string | null
+  status?: string
+}
+
+interface GameStatus {
+  id: number
+  game: string
+  status: string | null
+  version: string | null
+  updatedAt: number | null
 }
 
 export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [gameStatuses, setGameStatuses] = useState<GameStatus[]>([])
   const router = useRouter()
+
+  const ordersPerPage = 10
+  const totalPages = Math.ceil(orders.length / ordersPerPage)
+  const startIndex = (currentPage - 1) * ordersPerPage
+  const endIndex = startIndex + ordersPerPage
+  const currentOrders = orders.slice(startIndex, endIndex)
 
   useEffect(() => {
     checkAuthAndLoadData()
@@ -67,7 +86,8 @@ export default function AdminPage() {
         })),
         total: order.total,
         proofImage: order.proofImage || '',
-        timestamp: order.createdAt ? new Date(order.createdAt).toISOString() : new Date().toISOString(),
+        timestamp: order.createdAt ? new Date(order.createdAt * 1000).toISOString() : new Date().toISOString(),
+        status: order.status || 'pending',
       }))
 
       // Load keys from localStorage
@@ -78,6 +98,24 @@ export default function AdminPage() {
       })
 
       setOrders(ordersWithKeys.reverse())
+    }
+
+    // Load game statuses
+    const statusesResult = await getGameStatuses()
+    if (statusesResult.success) {
+      const existingStatuses = statusesResult.statuses
+      const allGames = ['CODM', 'MLBB', 'Free Fire', 'PUBG', 'Ball Pool', 'Arena Breakout', 'Delta Force']
+      const completeStatuses = allGames.map(game => {
+        const existing = existingStatuses.find(s => s.game === game)
+        return existing || {
+          id: 0,
+          game,
+          status: 'Safe to use',
+          version: 'v1.0.0',
+          updatedAt: Math.floor(Date.now() / 1000)
+        }
+      })
+      setGameStatuses(completeStatuses)
     }
 
     setLoading(false)
@@ -93,8 +131,12 @@ export default function AdminPage() {
   }
 
   const updateOrderKey = async (orderId: string, key: string) => {
-    const result = await updateOrder(orderId, key, key ? 'completed' : 'pending')
+    const status = selectedOrder?.status || 'pending'
+    const result = await updateOrder(orderId, key, status)
     if (result.success) {
+      // Show success notification
+      alert('Key enviada exitosamente')
+
       // Reload orders
       const ordersResult = await getAllOrders()
       if (ordersResult.success) {
@@ -112,14 +154,40 @@ export default function AdminPage() {
           })),
           total: order.total,
           proofImage: order.proofImage || '',
-          timestamp: order.createdAt ? new Date(order.createdAt).toISOString() : new Date().toISOString(),
+          timestamp: order.createdAt ? new Date(order.createdAt * 1000).toISOString() : new Date().toISOString(),
+          status: order.status || 'pending',
           key: order.key,
         }))
         setOrders(transformedOrders.reverse())
-        setSelectedOrder({ ...selectedOrder!, key })
+        setSelectedOrder({ ...selectedOrder!, key, status })
       }
     } else {
       alert('Failed to update key')
+    }
+  }
+
+  const handleUpdateGameStatus = async (game: string, status: string, version: string) => {
+    const result = await updateGameStatus(game, status, version)
+    if (result.success) {
+      // Reload and merge statuses
+      const statusesResult = await getGameStatuses()
+      if (statusesResult.success) {
+        const existingStatuses = statusesResult.statuses
+        const allGames = ['CODM', 'MLBB', 'Free Fire', 'PUBG', 'Ball Pool', 'Arena Breakout', 'Delta Force']
+        const completeStatuses = allGames.map(g => {
+          const existing = existingStatuses.find(s => s.game === g)
+          return existing || {
+            id: 0,
+            game: g,
+            status: 'Safe to use',
+            version: 'v1.0.0',
+            updatedAt: Math.floor(Date.now() / 1000)
+          }
+        })
+        setGameStatuses(completeStatuses)
+      }
+    } else {
+      alert('Failed to update game status')
     }
   }
 
@@ -138,6 +206,8 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
+      <ShoppingCartModal />
+      <NavigationMenu />
 
       <div className="container mx-auto px-4 pt-32 pb-20 flex-1">
         <div className="mb-8">
@@ -209,7 +279,7 @@ export default function AdminPage() {
               <div className="py-12 text-center text-gray-400">No orders yet</div>
             ) : (
               <div className="space-y-4">
-                {orders.map((order) => (
+                {currentOrders.map((order) => (
                   <div
                     key={order.orderId}
                     className="rounded-lg border border-white/10 dark:bg-black/40 dark:hover:bg-black/60 bg-gray-50 hover:bg-gray-100 cursor-pointer"
@@ -219,7 +289,27 @@ export default function AdminPage() {
                       <div className="flex-1">
                         <div className="mb-2 flex items-center gap-3">
                           <Badge className="bg-purple-600 text-white">{order.orderId}</Badge>
-                          <span className="text-sm text-gray-400">{new Date(order.timestamp).toLocaleString()}</span>
+                          <Badge
+                            className={`${
+                              order.status === 'paid' ? 'bg-green-600' :
+                              order.status === 'invalid_capture' ? 'bg-red-600' :
+                              order.status === 'completed' ? 'bg-blue-600' :
+                              order.status === 'cancelled' ? 'bg-gray-600' :
+                              'bg-yellow-600'
+                            } text-white`}
+                          >
+                            {order.status === 'paid' ? 'Paid' :
+                             order.status === 'invalid_capture' ? 'Invalid Capture' :
+                             order.status === 'completed' ? 'Completed' :
+                             order.status === 'cancelled' ? 'Cancelled' :
+                             'Pending'}
+                          </Badge>
+                          <span className="text-sm text-gray-400">
+                            {order.timestamp && new Date(order.timestamp).getTime() > 1577836800000
+                              ? new Date(order.timestamp).toLocaleString()
+                              : 'Date not available'
+                            }
+                          </span>
                         </div>
 
                         <div className="mb-2 flex items-center gap-2 text-sm text-gray-300">
@@ -256,6 +346,111 @@ export default function AdminPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Game Status Management */}
+        <Card className="border-purple-500/20 dark:bg-black bg-white">
+          <CardContent className="p-6">
+            <h2 className="mb-6 text-xl font-bold dark:text-white text-purple-600">Game Status Management</h2>
+
+            <div className="space-y-4">
+              {gameStatuses.map((gameStatus) => (
+                <div key={gameStatus.game} className="flex items-center justify-between rounded-lg bg-white/5 p-4">
+                  <div className="flex items-center gap-4">
+                    <span className="font-semibold dark:text-white text-purple-600">{gameStatus.game}</span>
+                    <input
+                      type="text"
+                      value={gameStatus.version || 'v1.0.0'}
+                      onChange={(e) => {
+                        const updated = gameStatuses.map(gs =>
+                          gs.game === gameStatus.game ? { ...gs, version: e.target.value } : gs
+                        )
+                        setGameStatuses(updated)
+                      }}
+                      className="px-2 py-1 bg-gray-800 border border-gray-600 rounded text-white text-sm w-20"
+                      placeholder="v1.0.0"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={gameStatus.status || 'Safe to use'}
+                      onChange={(e) => handleUpdateGameStatus(gameStatus.game, e.target.value, gameStatus.version || 'v1.0.0')}
+                      className="px-3 py-1 bg-gray-800 border border-gray-600 rounded text-white text-sm"
+                    >
+                      <option value="Testing">Testing</option>
+                      <option value="Detected">Detected</option>
+                      <option value="Use at your own risk">Use at your own risk</option>
+                      <option value="Updating">Updating</option>
+                      <option value="Safe to use">Safe to use</option>
+                    </select>
+                    <div className="flex gap-1">
+                      {Array.from({ length: 2 }, (_, i) => (
+                        <div
+                          key={i}
+                          className={`h-2 w-2 rounded-full ${
+                            (gameStatus.status === 'Testing' && 'bg-purple-500') ||
+                            (gameStatus.status === 'Detected' && 'bg-red-500') ||
+                            (gameStatus.status === 'Use at your own risk' && 'bg-orange-500') ||
+                            (gameStatus.status === 'Updating' && 'bg-gray-500') ||
+                            (gameStatus.status === 'Safe to use' && 'bg-green-500') ||
+                            'bg-white'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6">
+            <div className="text-sm text-gray-400">
+              Showing {startIndex + 1} to {Math.min(endIndex, orders.length)} of {orders.length} orders
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="border-white/10 dark:bg-black/40 dark:text-white dark:hover:bg-white/5 bg-gray-50 text-purple-600 hover:bg-gray-100"
+              >
+                Previous
+              </Button>
+
+              <div className="flex gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(page)}
+                    className={
+                      currentPage === page
+                        ? "bg-purple-600 text-white"
+                        : "border-white/10 dark:bg-black/40 dark:text-white dark:hover:bg-white/5 bg-gray-50 text-purple-600 hover:bg-gray-100"
+                    }
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="border-white/10 dark:bg-black/40 dark:text-white dark:hover:bg-white/5 bg-gray-50 text-purple-600 hover:bg-gray-100"
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Order Details Dialog */}
@@ -330,6 +525,25 @@ export default function AdminPage() {
                     className="w-full object-contain"
                   />
                 </div>
+              </div>
+
+              {/* Status */}
+              <div className="rounded-lg border border-white/10 dark:bg-black/40 bg-gray-50 p-4">
+                <div className="mb-4 flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-purple-400" />
+                  <h3 className="font-semibold dark:text-white text-purple-600">Order Status</h3>
+                </div>
+                <select
+                  value={selectedOrder.status || 'pending'}
+                  onChange={(e) => setSelectedOrder({ ...selectedOrder!, status: e.target.value })}
+                  className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="paid">Paid</option>
+                  <option value="invalid_capture">Invalid Capture</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
               </div>
 
               {/* License Key */}

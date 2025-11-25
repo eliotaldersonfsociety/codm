@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { registerUser } from "@/app/actions/auth";
 import { NavigationMenu } from "@/components/navigation-menu";
 import { ShoppingCartModal } from "@/components/shopping-cart";
+import Image from "next/image";
 
 export default function SignupPageContent() {
   const router = useRouter();
@@ -57,10 +58,14 @@ export default function SignupPageContent() {
           
           {/* Logo */}
           <div className="flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-purple-700">
-              <svg className="h-10 w-10 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L4 7v10l8 5 8-5V7l-8-5zm0 2.18l5.5 3.44v6.76L12 17.82l-5.5-3.44V7.62L12 4.18z" />
-              </svg>
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl overflow-hidden">
+              <Image
+                src="/icon.png"
+                alt="Logo"
+                width={64}
+                height={64}
+                className="object-cover"
+              />
             </div>
           </div>
 
@@ -117,7 +122,7 @@ export default function SignupPageContent() {
 
               <p className="text-center text-sm text-gray-400">
                 Already have an account?{" "}
-                <Link href="/login" className="font-medium text-purple-400 hover:text-purple-300">
+                <Link href={`/login${redirect !== '/dashboard' ? `?redirect=${encodeURIComponent(redirect)}` : ''}`} className="font-medium text-purple-400 hover:text-purple-300">
                   Sign in
                 </Link>
               </p>

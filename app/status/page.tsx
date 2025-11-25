@@ -1,13 +1,86 @@
+"use client"
+
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { RefreshCw } from "lucide-react"
+import { useState, useEffect } from "react"
+import { getGameStatuses } from "@/app/actions/auth"
+import { NavigationMenu } from "@/components/navigation-menu"
+import { ShoppingCartModal } from "@/components/shopping-cart"
+
+interface GameStatus {
+  id: number
+  game: string
+  status: string | null
+  version: string | null
+  updatedAt: number | null
+}
 
 export default function StatusPage() {
+  const [gameStatuses, setGameStatuses] = useState<GameStatus[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadStatuses = async () => {
+      const result = await getGameStatuses()
+      if (result.success) {
+        const existingStatuses = result.statuses
+        const allGames = ['CODM', 'MLBB', 'Free Fire', 'PUBG', 'Ball Pool', 'Arena Breakout', 'Delta Force']
+        const completeStatuses = allGames.map(game => {
+          const existing = existingStatuses.find(s => s.game === game)
+          return existing || {
+            id: 0,
+            game,
+            status: 'Safe to use',
+            version: 'v1.0.0',
+            updatedAt: Math.floor(Date.now() / 1000)
+          }
+        })
+        setGameStatuses(completeStatuses)
+      }
+      setLoading(false)
+    }
+    loadStatuses()
+  }, [])
+
+  const getStatusColor = (status: string | null) => {
+    switch (status) {
+      case 'Testing': return 'bg-purple-500'
+      case 'Detected': return 'bg-red-500'
+      case 'Use at your own risk': return 'bg-orange-500'
+      case 'Updating': return 'bg-gray-500'
+      case 'Safe to use': return 'bg-green-500'
+      default: return 'bg-white'
+    }
+  }
+
+  const handleRefresh = async () => {
+    setLoading(true)
+    const result = await getGameStatuses()
+    if (result.success) {
+      const existingStatuses = result.statuses
+      const allGames = ['CODM', 'MLBB', 'Free Fire', 'PUBG', 'Ball Pool', 'Arena Breakout', 'Delta Force']
+      const completeStatuses = allGames.map(game => {
+        const existing = existingStatuses.find(s => s.game === game)
+        return existing || {
+          id: 0,
+          game,
+          status: 'Safe to use',
+          version: 'v1.0.0',
+          updatedAt: Math.floor(Date.now() / 1000)
+        }
+      })
+      setGameStatuses(completeStatuses)
+    }
+    setLoading(false)
+  }
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <ShoppingCartModal />
+      <NavigationMenu />
 
       <section className="relative pt-32 pb-20">
         <div className="container mx-auto px-4">
@@ -27,47 +100,30 @@ export default function StatusPage() {
                     <h2 className="mb-2 text-2xl font-bold dark:text-white text-purple-600">System Status</h2>
                     <p className="text-sm text-gray-400">Current status of all Fluorite products</p>
                   </div>
-                  <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
-                    <RefreshCw className="h-5 w-5" />
+                  <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white" onClick={handleRefresh} disabled={loading}>
+                    <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
                   </Button>
                 </div>
 
                 <div className="space-y-4 border-b border-white/10 pb-6">
-                  {/* CODM Status */}
-                  <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
-                    <div className="flex items-center gap-4">
-                      <span className="font-semibold dark:text-white text-purple-600">CODM</span>
-                      <span className="text-sm text-gray-400">v1.0.50</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded-full bg-white" />
-                      <div className="h-3 w-3 rounded-full bg-white" />
-                    </div>
-                  </div>
-
-                  {/* MLBB Status */}
-                  <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
-                    <div className="flex items-center gap-4">
-                      <span className="font-semibold dark:text-white text-purple-600">MLBB</span>
-                      <span className="text-sm text-gray-400">v1.9.98</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded-full bg-white" />
-                      <div className="h-3 w-3 rounded-full bg-white" />
-                    </div>
-                  </div>
-
-                  {/* FF Status */}
-                  <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
-                    <div className="flex items-center gap-4">
-                      <span className="font-semibold dark:text-white text-purple-600">FF</span>
-                      <span className="text-sm text-gray-400">v1.114</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded-full bg-purple-500" />
-                      <div className="h-3 w-3 rounded-full bg-purple-500" />
-                    </div>
-                  </div>
+                  {loading ? (
+                    <div className="text-center text-gray-400">Loading game statuses...</div>
+                  ) : gameStatuses.length === 0 ? (
+                    <div className="text-center text-gray-400">No game statuses available</div>
+                  ) : (
+                    gameStatuses.map((gameStatus) => (
+                      <div key={gameStatus.game} className="flex items-center justify-between rounded-lg bg-white/5 p-4">
+                        <div className="flex items-center gap-4">
+                          <span className="font-semibold dark:text-white text-purple-600">{gameStatus.game}</span>
+                          <span className="text-sm text-gray-400">{gameStatus.version || 'v1.0.0'}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className={`h-3 w-3 rounded-full ${getStatusColor(gameStatus.status)}`} />
+                          <div className={`h-3 w-3 rounded-full ${getStatusColor(gameStatus.status)}`} />
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
 
                 {/* Status Legend */}

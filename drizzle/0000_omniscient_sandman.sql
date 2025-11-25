@@ -1,3 +1,12 @@
+CREATE TABLE `game_statuses` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`game` text NOT NULL,
+	`status` text,
+	`version` text,
+	`updated_at` integer DEFAULT (strftime('%s','now')) NOT NULL
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `game_statuses_game_unique` ON `game_statuses` (`game`);--> statement-breakpoint
 CREATE TABLE `order_items` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`order_id` integer NOT NULL,
@@ -16,8 +25,9 @@ CREATE TABLE `orders` (
 	`total` real NOT NULL,
 	`proof_image` text,
 	`status` text,
+	`key` text,
 	`order_id` text NOT NULL,
-	`created_at` integer,
+	`created_at` integer DEFAULT (strftime('%s','now')) NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -26,7 +36,10 @@ CREATE TABLE `users` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`email` text NOT NULL,
 	`password_hash` text NOT NULL,
-	`created_at` integer
+	`role` text,
+	`reset_token` text,
+	`reset_token_expires` integer,
+	`created_at` integer DEFAULT (strftime('%s','now')) NOT NULL
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `users_email_unique` ON `users` (`email`);
