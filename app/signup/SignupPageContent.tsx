@@ -9,6 +9,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { registerUser } from "@/app/actions/auth";
+import { NavigationMenu } from "@/components/navigation-menu";
+import { ShoppingCartModal } from "@/components/shopping-cart";
 
 export default function SignupPageContent() {
   const router = useRouter();
@@ -126,6 +128,9 @@ export default function SignupPageContent() {
       </div>
 
       <Footer />
+
+      <ShoppingCartModal />
+      <NavigationMenu />
     </div>
   );
 }

@@ -10,6 +10,8 @@ import { useState } from "react"
 import { useRouter } from 'next/navigation'
 import { loginUser, getCurrentUser } from "@/app/actions/auth"
 import Image from "next/image"
+import { NavigationMenu } from "@/components/navigation-menu"
+import { ShoppingCartModal } from "@/components/shopping-cart"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -132,6 +134,9 @@ export default function LoginPage() {
       </div>
 
       <Footer />
+
+      <ShoppingCartModal />
+      <NavigationMenu />
     </div>
   )
 }
