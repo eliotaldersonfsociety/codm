@@ -124,7 +124,7 @@ export default function HomePage() {
                   onLoad={() => setVideoLoaded(true)}
                 >
                   <img
-                    src="https://img.youtube.com/vi/Xp7enikm6V0/maxresdefault.jpg"
+                    src="https://img.youtube.com/vi/Xp7enikm6V0/mqdefault.jpg"
                     alt="Gameplay Video Thumbnail"
                     className="h-full w-full object-cover"
                   />
