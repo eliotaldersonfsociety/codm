@@ -24,11 +24,20 @@ export default function FeaturedGames() {
           {/* Mobile Legends Card */}
           <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
             <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
-              <Badge className="absolute left-4 top-4 bg-purple-600 text-white">Most Popular</Badge>
-              <Badge className="absolute right-4 top-4 bg-gray-800 text-white">Updating</Badge>
-              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$30/month</Badge>
+
+              <Badge className="absolute left-4 top-4 bg-purple-600 text-white shadow-lg shadow-black/60 border border-purple-500">
+                Most Popular
+              </Badge>
+
+              <Badge className="absolute right-4 top-4 bg-gray-800 text-white shadow-lg shadow-black/60 border border-gray-600">
+                Updating
+              </Badge>
+
+              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white shadow-lg shadow-black/60 border border-purple-500">
+                $50/month
+              </Badge>
               <img
-                src="/mobile-legends-bang-bang-character.webp"
+                src="/mobile-legends-bang-bang-character.avif"
                 alt="Mobile Legends"
                 className="h-full w-full object-cover opacity-80"
               />
@@ -70,10 +79,10 @@ export default function FeaturedGames() {
           {/* Free Fire Card */}
           <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
             <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
-              <Badge className="absolute right-4 top-4 bg-gray-800 text-white">Testing</Badge>
-              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$26.99/month</Badge>
+              <Badge className="absolute right-4 top-4 bg-gray-800 text-white shadow-lg shadow-black/60 border border-gray-600">Testing</Badge>
+              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white shadow-lg shadow-black/60 border border-purple-500">$26.99/month</Badge>
               <img
-                src="/free-fire-game-character.jpg"
+                src="/free-fire-game-character.avif"
                 alt="Free Fire"
                 className="h-full w-full object-cover opacity-80"
               />
@@ -112,10 +121,10 @@ export default function FeaturedGames() {
           {/* CODM Card */}
           <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
             <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
-              <Badge className="absolute right-4 top-4 bg-gray-800 text-white">Updating</Badge>
-              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$25/month</Badge>
+              <Badge className="absolute right-4 top-4 bg-gray-800 text-white shadow-lg shadow-black/60 border border-gray-600">Updating</Badge>
+              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white shadow-lg shadow-black/60 border border-purple-500">$25/month</Badge>
               <img
-                src="/call-of-duty-mobile-soldier.jpg"
+                src="/call-of-duty-mobile-soldier.avif"
                 alt="CODM"
                 className="h-full w-full object-cover opacity-80"
               />
@@ -152,8 +161,8 @@ export default function FeaturedGames() {
           {/* PUBG Card */}
           <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
             <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
-              <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
-              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
+              <Badge className="absolute right-4 top-4 bg-gray-800 text-white shadow-lg shadow-black/60 border border-gray-600">New</Badge>
+              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white shadow-lg shadow-black/60 border border-purple-500">$50/month</Badge>
               <img
                 src="/pubg.webp"
                 alt="PUBG"
@@ -194,10 +203,10 @@ export default function FeaturedGames() {
           {/* Arena Breakout Card */}
           <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
             <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
-              <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
-              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
+              <Badge className="absolute right-4 top-4 bg-gray-800 text-white shadow-lg shadow-black/60 border border-gray-600">New</Badge>
+              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white shadow-lg shadow-black/60 border border-purple-500">$50/month</Badge>
               <img
-                src="/arena.webp"
+                src="/arena.avif"
                 alt="Arena Breakout"
                 className="h-full w-full object-cover opacity-80"
               />
@@ -236,10 +245,10 @@ export default function FeaturedGames() {
           {/* Delta Force Card */}
           <Card className="overflow-hidden border-purple-500/20 bg-white dark:bg-black">
             <div className="relative aspect-video bg-gradient-to-br from-purple-800/30 to-purple-900/30 p-4">
-              <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
-              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
+              <Badge className="absolute right-4 top-4 bg-gray-800 text-white shadow-lg shadow-black/60 border border-gray-600">New</Badge>
+              <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white shadow-lg shadow-black/60 border border-purple-500">$50/month</Badge>
               <img
-                src="/delta.jpg"
+                src="/delta.avif"
                 alt="Delta Force"
                 className="h-full w-full object-cover opacity-80"
               />
