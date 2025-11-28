@@ -264,7 +264,7 @@ export default function HomePage() {
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
                 <img
-                  src="/pubg.png"
+                  src="/pubg.webp"
                   alt="PUBG"
                   className="h-full w-full object-cover opacity-80"
                 />
@@ -306,7 +306,7 @@ export default function HomePage() {
                 <Badge className="absolute right-4 top-4 bg-gray-800 text-white">New</Badge>
                 <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$50/month</Badge>
                 <img
-                  src="/arena.jpg"
+                  src="/arena.webp"
                   alt="Arena Breakout"
                   className="h-full w-full object-cover opacity-80"
                 />
