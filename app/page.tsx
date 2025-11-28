@@ -38,6 +38,8 @@ export default function HomePage() {
       <ShoppingCartModal />
       <NavigationMenu />
 
+      <main>
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-20">
         <div className="container mx-auto px-4">
@@ -508,6 +510,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </main>
 
       <Footer />
     </div>
