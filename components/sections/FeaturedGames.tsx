@@ -68,9 +68,9 @@ export default function FeaturedGames() {
                 </div>
               </div>
               <Link href="/mlbb" className="block">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700" aria-label="Buy Mobile Legends cheat">
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  buy
+                  Buy MLBB
                 </Button>
               </Link>
             </CardContent>
@@ -110,9 +110,9 @@ export default function FeaturedGames() {
                 </div>
               </div>
               <Link href="/free-fire" className="block">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700" aria-label="Buy Free Fire cheat">
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  buy
+                  Buy Free Fire
                 </Button>
               </Link>
             </CardContent>
@@ -150,9 +150,9 @@ export default function FeaturedGames() {
                 </div>
               </div>
               <Link href="/codm" className="block">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700" aria-label="Buy CODM cheat">
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  buy
+                  Buy CODM
                 </Button>
               </Link>
             </CardContent>
@@ -192,9 +192,9 @@ export default function FeaturedGames() {
                 </div>
               </div>
               <Link href="/pubg" className="block">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700" aria-label="Buy PUBG cheat">
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  buy
+                  Buy PUBG
                 </Button>
               </Link>
             </CardContent>
@@ -234,9 +234,9 @@ export default function FeaturedGames() {
                 </div>
               </div>
               <Link href="/arena-breakout" className="block">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700" aria-label="Buy Arena Breakout cheat">
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  buy
+                  Buy Arena Breakout
                 </Button>
               </Link>
             </CardContent>
@@ -276,9 +276,9 @@ export default function FeaturedGames() {
                 </div>
               </div>
               <Link href="/delta-force" className="block">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700" aria-label="Buy Delta Force cheat">
                   <ShoppingCart className="mr-2 h-4 w-4" />
-                  buy
+                  Buy Delta Force
                 </Button>
               </Link>
             </CardContent>

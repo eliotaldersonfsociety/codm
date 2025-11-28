@@ -78,11 +78,11 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white" onClick={openMenu}>
+          <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white" onClick={openMenu} aria-label="Open menu">
             <Menu className="h-5 w-5" />
           </Button>
 
-          <Button variant="ghost" size="icon" className="relative text-gray-300 hover:text-white" onClick={openCart}>
+          <Button variant="ghost" size="icon" className="relative text-gray-300 hover:text-white" onClick={openCart} aria-label="Open shopping cart">
             <ShoppingCart className="h-5 w-5" />
             {cartCount > 0 && (
               <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-600 text-xs font-bold text-white">
@@ -92,14 +92,14 @@ export function Header() {
           </Button>
 
           {mounted && (
-            <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+            <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label="Toggle theme">
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
           )}
 
           <Link href="/dashboard">
             <Button className="hidden md:flex bg-purple-600 text-white hover:bg-purple-700">Dashboard</Button>
-            <Button variant="ghost" size="icon" className="md:hidden text-gray-300 hover:text-white">
+            <Button variant="ghost" size="icon" className="md:hidden text-gray-300 hover:text-white" aria-label="Go to dashboard">
               {user ? (
                 <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-xs font-bold text-white">
                   {user.email.charAt(0).toUpperCase()}
@@ -128,6 +128,7 @@ export function Header() {
               await logoutUser()
               router.push('/login')
             }}
+            aria-label="Logout"
           >
             <LogOut className="h-5 w-5" />
           </Button>
