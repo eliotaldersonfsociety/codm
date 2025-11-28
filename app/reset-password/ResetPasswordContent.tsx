@@ -131,7 +131,7 @@ export default function ResetPasswordContent() {
           <div className="flex justify-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-xl overflow-hidden">
               <Image
-                src="/icon.png"
+                src="/icon.webp"
                 alt="Logo"
                 width={64}
                 height={64}

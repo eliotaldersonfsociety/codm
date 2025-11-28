@@ -11,7 +11,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg overflow-hidden">
                 <Image
-                  src="/icon.png"
+                  src="/icon.webp"
                   alt="Logo"
                   width={40}
                   height={40}
