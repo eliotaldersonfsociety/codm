@@ -12,10 +12,17 @@ import { Clock, Shield, Wallet, Check, Play, ShoppingCart, Star } from "lucide-r
 import Link from "next/link"
 import { getRandomAvatars } from "@/app/actions/avatars"
 import { useState, useEffect } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function HomePage() {
   const [avatars, setAvatars] = useState<string[]>([]);
   const [selectedGame, setSelectedGame] = useState("Mobile Legends");
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  useEffect(() => {
+  const timer = setTimeout(() => setVideoLoaded(true), 800) // 1 segundo
+  return () => clearTimeout(timer)
+}, [])
 
   useEffect(() => {
     getRandomAvatars(4).then(setAvatars);
@@ -96,12 +103,14 @@ export default function HomePage() {
 
             {/* Right Content - Video Embed */}
             <div className="relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-purple-900/20 to-black">
+              {!videoLoaded && <Skeleton className="absolute inset-0 h-full w-full" />}
               <iframe
                 className="h-full w-full"
                 src="https://www.youtube.com/embed/Xp7enikm6V0?modestbranding=1&showinfo=0&rel=0"
                 title="Gameplay Video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                onLoad={() => setVideoLoaded(true)}
               />
             </div>
           </div>
