@@ -21,6 +21,7 @@ export default function HomePage() {
   const [avatars, setAvatars] = useState<string[]>([]);
   const [selectedGame, setSelectedGame] = useState("Mobile Legends");
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
   useEffect(() => {
   const timer = setTimeout(() => setVideoLoaded(true), 800) // 1 segundo
@@ -107,14 +108,33 @@ export default function HomePage() {
             {/* Right Content - Video Embed */}
             <div className="relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-purple-900/20 to-black">
               {!videoLoaded && <Skeleton className="absolute inset-0 h-full w-full" />}
-              <iframe
-                className="h-full w-full"
-                src="https://www.youtube.com/embed/Xp7enikm6V0?modestbranding=1&showinfo=0&rel=0"
-                title="Gameplay Video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                onLoad={() => setVideoLoaded(true)}
-              />
+              {videoPlaying ? (
+                <iframe
+                  className="h-full w-full"
+                  src="https://www.youtube.com/embed/Xp7enikm6V0?modestbranding=1&showinfo=0&rel=0"
+                  title="Gameplay Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  onLoad={() => setVideoLoaded(true)}
+                />
+              ) : (
+                <div
+                  className="relative h-full w-full cursor-pointer"
+                  onClick={() => setVideoPlaying(true)}
+                  onLoad={() => setVideoLoaded(true)}
+                >
+                  <img
+                    src="https://img.youtube.com/vi/Xp7enikm6V0/maxresdefault.jpg"
+                    alt="Gameplay Video Thumbnail"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-purple-600/80 hover:bg-purple-600">
+                      <Play className="h-8 w-8 text-white ml-1" />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
