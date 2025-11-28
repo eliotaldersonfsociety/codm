@@ -12,7 +12,7 @@ import {
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { eq, count } from 'drizzle-orm'
-import { RateLimitPresets, Ratelimit, redis } from '@/lib/rate-limit'
+import { RateLimitPresets, RateLimiter } from '@/lib/rate-limit'
 
 // ---------------------------
 // Config / helpers
@@ -68,13 +68,15 @@ export async function registerUser(formData: FormData) {
     return { error: 'Password must be at least 6 characters' }
   }
 
-  // Rate limiting
-  const ip = await getIp()
-  const rl = await RateLimitPresets.ip(ip).limit(`register:${ip}`)
-  if (!rl.success) return { error: 'Too many registration attempts. Please try again later.' }
+  // Rate limiting (only if Redis is configured)
+  if (RateLimitPresets) {
+    const ip = await getIp()
+    const rl = await RateLimitPresets.ip(ip).limit(`register:${ip}`)
+    if (!rl.success) return { error: 'Too many registration attempts. Please try again later.' }
 
-  const spam = await RateLimitPresets.antiSpam(ip).limit(`spamreg:${ip}`)
-  if (!spam.success) return { error: 'Too many requests. Please try again later.' }
+    const spam = await RateLimitPresets.antiSpam(ip).limit(`spamreg:${ip}`)
+    if (!spam.success) return { error: 'Too many requests. Please try again later.' }
+  }
 
   try {
     const passwordHash = await bcrypt.hash(password, 10)
@@ -126,19 +128,21 @@ export async function loginUser(formData: FormData) {
     return { error: 'Email and password are required' }
   }
 
-  // Rate limiting
-  const ip = await getIp()
+  // Rate limiting (only if Redis is configured)
+  if (RateLimitPresets) {
+    const ip = await getIp()
 
-  // LIMITAR 10 por minuto
-  const rl = await RateLimitPresets.ip(ip).limit(`login:${ip}`)
-  if (!rl.success) {
-    return { error: 'Too many login attempts. Please try again later.' }
-  }
+    // LIMITAR 10 por minuto
+    const rl = await RateLimitPresets.ip(ip).limit(`login:${ip}`)
+    if (!rl.success) {
+      return { error: 'Too many login attempts. Please try again later.' }
+    }
 
-  // Anti spam extremo (4 intentos cada 30s)
-  const spam = await RateLimitPresets.antiSpam(ip).limit(`spam:${ip}`)
-  if (!spam.success) {
-    return { error: 'Too many requests. Please try again later.' }
+    // Anti spam extremo (4 intentos cada 30s)
+    const spam = await RateLimitPresets.antiSpam(ip).limit(`spam:${ip}`)
+    if (!spam.success) {
+      return { error: 'Too many requests. Please try again later.' }
+    }
   }
 
   try {
@@ -312,11 +316,7 @@ export async function requestPasswordReset(formData: FormData) {
 
   // Rate limiting - Máximo 3 intentos cada 10 min
   const ip = await getIp()
-  const rl = await new Ratelimit({
-    redis,
-    limiter: Ratelimit.fixedWindow(3, "10 m"),
-    prefix: `rl:pwdreset:${ip}`,
-  }).limit(ip)
+  const rl = await new RateLimiter('pwdreset', 3, 600).limit(ip)
 
   if (!rl.success) {
     return { error: 'Too many password reset requests. Please try again later.' }
@@ -459,9 +459,11 @@ export async function updateGameStatus(game: string, status: string, version?: s
     return { error: 'Unauthorized' }
   }
 
-  // Rate limit ADMIN
-  const rl = await RateLimitPresets.antiSpamUser(caller.id).limit(`updatestatus:${caller.id}`)
-  if (!rl.success) return { error: 'Too many requests. Please try again later.' }
+  // Rate limit ADMIN (only if Redis configured)
+  if (RateLimitPresets) {
+    const rl = await RateLimitPresets.antiSpamUser(caller.id).limit(`updatestatus:${caller.id}`)
+    if (!rl.success) return { error: 'Too many requests. Please try again later.' }
+  }
 
   const validStatuses = ['Testing', 'Detected', 'Use at your own risk', 'Updating', 'Safe to use']
   if (!validStatuses.includes(status)) {

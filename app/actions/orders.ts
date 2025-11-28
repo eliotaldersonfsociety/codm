@@ -6,7 +6,7 @@ import { orders, orderItems } from '@/lib/schema'
 import { eq, desc } from 'drizzle-orm'
 import { cookies, headers } from 'next/headers'
 import { CartItem } from '@/lib/cart-store'
-import { RateLimitPresets, Ratelimit, redis } from '@/lib/rate-limit'
+import { RateLimitPresets, RateLimiter } from '@/lib/rate-limit'
 
 type SafeUser = {
   id: number
@@ -64,17 +64,12 @@ export async function saveOrder(formData: FormData) {
 
   // Max 3 orders per minute per user
   if (payload) {
-    const userRl = await RateLimitPresets.antiSpamUser(payload.id).limit(`order:${payload.id}`)
+    const userRl = await RateLimitPresets.ordersUser(payload.id).limit(payload.id.toString())
     if (!userRl.success) return { error: 'Too many orders. Please try again later.' }
   }
 
-  // Block IP if 20 fake attempts (sliding window 20 attempts per hour)
-  const ipRl = await new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(20, "1 h"),
-    prefix: `rl:orderblock:${ip}`,
-  }).limit(ip)
-
+  // Block IP if 20 fake attempts (20 attempts per hour)
+  const ipRl = await RateLimitPresets.ordersBlock(ip).limit(ip)
   if (!ipRl.success) return { error: 'Too many failed attempts. IP blocked temporarily.' }
 
   try {

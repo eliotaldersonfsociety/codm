@@ -41,12 +41,18 @@ export const gameStatuses = sqliteTable('game_statuses', {
   updatedAt: integer('updated_at').notNull().default(sql`(strftime('%s','now'))`),
 });
 
+export const rateLimits = sqliteTable('rate_limits', {
+  key: text('key').primaryKey().notNull(),
+  count: integer('count').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+});
+
 // Relations
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many }: { many: any }) => ({
   orders: many(orders),
 }));
 
-export const ordersRelations = relations(orders, ({ one, many }) => ({
+export const ordersRelations = relations(orders, ({ one, many }: { one: any; many: any }) => ({
   user: one(users, {
     fields: [orders.userId],
     references: [users.id],
@@ -54,7 +60,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
   items: many(orderItems),
 }));
 
-export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+export const orderItemsRelations = relations(orderItems, ({ one }: { one: any }) => ({
   order: one(orders, {
     fields: [orderItems.orderId],
     references: [orders.id],
