@@ -111,7 +111,7 @@ export default function PUBGPage() {
               </div>
               <CardContent className="p-8">
                 <Image
-                  src="/pubg.webp"
+                  src="/pubgb.webp"
                   alt="PUBG"
                   width={400}
                   height={150}
@@ -168,7 +168,7 @@ export default function PUBGPage() {
             <Card className="border-white/10 bg-white dark:bg-black">
               <CardContent className="p-8">
                 <Image
-                  src="/pubg.webp"
+                  src="/pubgb.webp"
                   alt="PUBG"
                   width={400}
                   height={150}
