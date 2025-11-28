@@ -1,17 +1,47 @@
 'use server'
 
+import jwt from 'jsonwebtoken'
 import { db } from '@/lib/db'
 import { orders, orderItems } from '@/lib/schema'
 import { eq, desc } from 'drizzle-orm'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { CartItem } from '@/lib/cart-store'
+import { RateLimitPresets, Ratelimit, redis } from '@/lib/rate-limit'
+
+type SafeUser = {
+  id: number
+  email: string
+  role: string
+}
+
+// Verify JWT, return payload or null
+function verifyToken(token: string | undefined): SafeUser | null {
+  if (!token) return null
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET || 'dev_jwt_secret_change_me') as any
+    if (!payload || !payload.id) return null
+    return { id: payload.id, email: payload.email, role: payload.role }
+  } catch (e) {
+    return null
+  }
+}
+
+// Get real IP
+async function getIp() {
+  const h = await headers()
+  return (
+    h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    h.get("x-real-ip") ||
+    "unknown"
+  )
+}
 
 export async function saveOrder(formData: FormData) {
-  const email = formData.get('email') as string
-  const discordUsername = formData.get('discordUsername') as string
-  const notes = formData.get('notes') as string
-  const total = parseFloat(formData.get('total') as string)
-  const proofImage = formData.get('proofImage') as string
+  const email = (formData.get('email') as string || '').trim()
+  const discordUsername = (formData.get('discordUsername') as string || '').trim()
+  const notes = (formData.get('notes') as string || '').trim()
+  const total = parseFloat(formData.get('total') as string || '0')
+  const proofImage = (formData.get('proofImage') as string || '').trim()
   const itemsJson = formData.get('items') as string
 
   if (!email || !proofImage || !itemsJson) {
@@ -25,62 +55,76 @@ export async function saveOrder(formData: FormData) {
     return { error: 'Invalid items data' }
   }
 
-  if (items.length === 0) {
-    return { error: 'No items in order' }
+  if (items.length === 0) return { error: 'No items in order' }
+
+  // Rate limiting
+  const ip = await getIp()
+  const token = (await cookies()).get('session')?.value
+  const payload = verifyToken(token)
+
+  // Max 3 orders per minute per user
+  if (payload) {
+    const userRl = await RateLimitPresets.antiSpamUser(payload.id).limit(`order:${payload.id}`)
+    if (!userRl.success) return { error: 'Too many orders. Please try again later.' }
   }
 
-  try {
-    // Get user_id from cookie if logged in
-    const cookieStore = await cookies()
-    const userIdCookie = cookieStore.get('user_id')?.value
-    const userId = userIdCookie ? parseInt(userIdCookie) : null
+  // Block IP if 20 fake attempts (sliding window 20 attempts per hour)
+  const ipRl = await new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(20, "1 h"),
+    prefix: `rl:orderblock:${ip}`,
+  }).limit(ip)
 
-    // Generate order_id
+  if (!ipRl.success) return { error: 'Too many failed attempts. IP blocked temporarily.' }
+
+  try {
+    // derive user id from JWT to avoid extra DB read
+    const token = (await cookies()).get('session')?.value
+    const payload = verifyToken(token)
+    const userId = payload ? payload.id : null
+
     const orderId = `FL-${Date.now()}`
 
-    // Insert order
-    const orderResult = await db.insert(orders).values({
-      userId,
-      email,
-      discordUsername,
-      notes,
-      total,
-      proofImage,
-      orderId,
-      key: null,
-    }).returning({ id: orders.id })
+    await db.transaction(async (tx: typeof db) => {
+      const orderResult = await tx.insert(orders).values({
+        userId,
+        email,
+        discordUsername,
+        notes,
+        total,
+        proofImage,
+        orderId,
+        key: null,
+      }).returning({ id: orders.id })
 
-    const orderDbId = orderResult[0].id
+      const orderDbId = (orderResult[0] as any).id
 
-    // Insert order items
-    await db.insert(orderItems).values(
-      items.map(item => ({
-        orderId: orderDbId,
-        game: item.game,
-        duration: item.duration,
-        price: item.price,
-      }))
-    )
+      await tx.insert(orderItems).values(
+        items.map(item => ({
+          orderId: orderDbId,
+          game: item.game,
+          duration: item.duration,
+          price: item.price,
+        }))
+      )
+    })
 
     return { success: true, orderId }
-  } catch (error) {
-    console.error('Save order error:', error)
+  } catch (err) {
+    console.error('Save order error:', err)
     return { error: 'Failed to save order' }
   }
 }
 
 export async function getUserOrders() {
-  const cookieStore = await cookies()
-  const userId = cookieStore.get('user_id')?.value
-
-  if (!userId) {
-    return { error: 'Not authenticated' }
-  }
+  const token = (await cookies()).get('session')?.value
+  const payload = verifyToken(token)
+  if (!payload) return { error: 'Not authenticated' }
 
   try {
-    // Get orders with items
+    // use query helpers (minimizes fields)
     const ordersWithItems = await db.query.orders.findMany({
-      where: eq(orders.userId, parseInt(userId)),
+      where: eq(orders.userId, payload.id),
       orderBy: [desc(orders.createdAt)],
       with: {
         items: true,
@@ -88,15 +132,19 @@ export async function getUserOrders() {
     })
 
     return { success: true, orders: ordersWithItems }
-  } catch (error) {
-    console.error('Get orders error:', error)
+  } catch (err) {
+    console.error('Get orders error:', err)
     return { error: 'Failed to get orders' }
   }
 }
 
 export async function getAllOrders() {
+  // admin only
+  const token = (await cookies()).get('session')?.value
+  const caller = verifyToken(token)
+  if (!caller || caller.role !== 'admin') return { error: 'Unauthorized' }
+
   try {
-    // Get all orders with items
     const ordersWithItems = await db.query.orders.findMany({
       orderBy: [desc(orders.createdAt)],
       with: {
@@ -105,46 +153,52 @@ export async function getAllOrders() {
     })
 
     return { success: true, orders: ordersWithItems }
-  } catch (error) {
-    console.error('Get all orders error:', error)
+  } catch (err) {
+    console.error('Get all orders error:', err)
     return { error: 'Failed to get orders' }
   }
 }
 
 export async function updateOrder(orderId: string, key: string, status?: string) {
-  try {
-    const updateData: any = { key }
-    if (status) updateData.status = status
+  // admin only (or you could allow order owner)
+  const token = (await cookies()).get('session')?.value
+  const caller = verifyToken(token)
+  if (!caller || caller.role !== 'admin') return { error: 'Unauthorized' }
 
-    await db.update(orders).set(updateData).where(eq(orders.orderId, orderId))
+  try {
+    const toUpdate: any = { key }
+    if (status) toUpdate.status = status
+
+    await db.update(orders).set(toUpdate).where(eq(orders.orderId, orderId))
 
     return { success: true }
-  } catch (error) {
-    console.error('Update order error:', error)
+  } catch (err) {
+    console.error('Update order error:', err)
     return { error: 'Failed to update order' }
   }
 }
 
 export async function deleteOrder(orderId: string) {
+  // admin only
+  const token = (await cookies()).get('session')?.value
+  const caller = verifyToken(token)
+  if (!caller || caller.role !== 'admin') return { error: 'Unauthorized' }
+
   try {
-    // Find the order to get its id
     const order = await db.query.orders.findFirst({
       where: eq(orders.orderId, orderId),
     })
 
-    if (!order) {
-      return { error: 'Order not found' }
-    }
+    if (!order) return { error: 'Order not found' }
 
-    // Delete order items first
-    await db.delete(orderItems).where(eq(orderItems.orderId, order.id))
-
-    // Then delete the order
-    await db.delete(orders).where(eq(orders.id, order.id))
+    await db.transaction(async (tx: typeof db) => {
+      await tx.delete(orderItems).where(eq(orderItems.orderId, order.id))
+      await tx.delete(orders).where(eq(orders.id, order.id))
+    })
 
     return { success: true }
-  } catch (error) {
-    console.error('Delete order error:', error)
+  } catch (err) {
+    console.error('Delete order error:', err)
     return { error: 'Failed to delete order' }
   }
 }

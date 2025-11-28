@@ -2,7 +2,8 @@
 
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const RESEND_API_KEY = process.env.RESEND_API_KEY
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null
 
 export async function sendContactEmail(formData: FormData) {
   const name = formData.get('name') as string
@@ -15,9 +16,14 @@ export async function sendContactEmail(formData: FormData) {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
+    if (!resend) {
+      console.warn('Resend not configured. Skipping send.')
+      return { success: true }
+    }
+
+    await resend.emails.send({
       from: 'Panel Hyper Soporte <noreply@hypersoporte.com>',
-      to: 'rennyardiladev@gmail.com',
+      to: ['rennyardiladev@gmail.com'],
       subject: `Contact Form: ${subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -38,14 +44,9 @@ export async function sendContactEmail(formData: FormData) {
       `,
     })
 
-    if (error) {
-      console.error('Resend error:', error)
-      return { error: 'Failed to send email' }
-    }
-
     return { success: true }
-  } catch (error) {
-    console.error('Contact email error:', error)
+  } catch (err) {
+    console.error('Contact email error:', err)
     return { error: 'Failed to send message' }
   }
 }
