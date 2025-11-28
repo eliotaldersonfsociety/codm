@@ -18,7 +18,7 @@ import dynamic from "next/dynamic"
 const FeaturedGames = dynamic(() => import('@/components/sections/FeaturedGames'), { ssr: false })
 
 export default function HomePage() {
-  const [avatars, setAvatars] = useState<string[]>([]);
+  const [avatars, setAvatars] = useState<{ small: string; large: string }[]>([]);
   const [selectedGame, setSelectedGame] = useState("Mobile Legends");
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoPlaying, setVideoPlaying] = useState(false);
@@ -26,7 +26,7 @@ export default function HomePage() {
   useEffect(() => {
   const timer = setTimeout(() => setVideoLoaded(true), 800) // 1 segundo
   return () => clearTimeout(timer)
-}, [])
+  }, [])
 
   useEffect(() => {
     getRandomAvatars(4).then(setAvatars);
@@ -237,7 +237,7 @@ export default function HomePage() {
           <div className="grid gap-6 md:grid-cols-2">
             <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-6">
               <div className="mb-4 flex items-center gap-3">
-                <img src={avatars[0] || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
+                <img src={avatars[0]?.small || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
                 <div>
                   <div className="font-semibold dark:text-white text-purple-600">@lyrevagoonz</div>
                   <div className="text-sm text-gray-400">Mobile Legends Player</div>
@@ -257,7 +257,7 @@ export default function HomePage() {
 
             <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-6">
               <div className="mb-4 flex items-center gap-3">
-                <img src={avatars[1] || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
+                <img src={avatars[1]?.small || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
                 <div>
                   <div className="font-semibold dark:text-white text-purple-600">Ghost</div>
                   <div className="text-sm text-gray-400">Free Fire Player</div>
@@ -277,7 +277,7 @@ export default function HomePage() {
 
             <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-6">
               <div className="mb-4 flex items-center gap-3">
-                <img src={avatars[2] || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
+                <img src={avatars[2]?.small || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
                 <div>
                   <div className="font-semibold dark:text-white text-purple-600">Y3S0xt</div>
                   <div className="text-sm text-gray-400">CODM Player</div>
@@ -298,7 +298,7 @@ export default function HomePage() {
 
             <Card className="border-purple-500/20 dark:bg-gradient-to-br dark:from-purple-900/5 dark:to-black p-6">
               <div className="mb-4 flex items-center gap-3">
-                <img src={avatars[3] || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
+                <img src={avatars[3]?.small || "/placeholder-user.jpg"} alt="User avatar" className="h-10 w-10 rounded-full object-cover" />
                 <div>
                   <div className="font-semibold dark:text-white text-purple-600">Hanni</div>
                   <div className="text-sm text-gray-400">Mobile Legends Player</div>
