@@ -28,7 +28,7 @@ export default function FeaturedGames() {
               <Badge className="absolute right-4 top-4 bg-gray-800 text-white">Updating</Badge>
               <Badge className="absolute bottom-4 right-4 bg-purple-600 text-white">$30/month</Badge>
               <img
-                src="/mobile-legends-bang-bang-character.jpg"
+                src="/mobile-legends-bang-bang-character.webp"
                 alt="Mobile Legends"
                 className="h-full w-full object-cover opacity-80"
               />
